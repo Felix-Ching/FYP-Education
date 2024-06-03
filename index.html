@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <link rel="stylesheet" type="text/css" href="style3.css">
+  <title>Main Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+  <script> 
+    if(sessionStorage.getItem("Type") == null){
+      sessionStorage.getItem("Type" , "Student")
+    }
+  </script>
+  <header>
+    <div id="leftbar">
+      <img src="image/profile.jpg" alt="profile">
+       <div class="logout">
+         <a href="login.html">
+         <button type="submit" class="btn btn-default btn-sm">
+         <span class="glyphicon glyphicon-log-out"></span></button></a>
+      </div>
+    </div>
+
+  </header>
+
+  <h1><strong>課程</strong></h1>
+  <div class="course">
+    <img src="image/1.jpg" alt="課程一">
+    <div class="text-info">
+      <h2><strong>瞭解你自己的英語程度</strong></h2>
+      <p>Learn the Basics</p>
+      <button class="info-button" onclick="showInfo(1)">瞭解詳情</button>
+    </div>
+  </div>
+
+  <div class="course">
+    <img src="image/2.jpg" alt="課程二">
+    <div class="text-info">
+      <h2><strong>醫療用語教學</strong></h2>
+      <p>教你如何描述自身的病症</p>
+      <button class="info-button" onclick="showInfo(2)">瞭解詳情</button>
+    </div>
+  </div>
+
+  <div class="course">
+    <img src="image/3.jpg" alt="課程三">
+    <div class="text-info">
+      <h2><strong>商業英文</strong></h2>
+      <p>教導你在面試或工作時的英文用語</p>
+      <button class="info-button" onclick="showInfo(3)">瞭解詳情</button>
+    </div>
+  </div>
+
+  <div id="sidebar" class="hidden">
+    <img src="image/books.jpg" alt="english level">
+    <div class="class-info">
+      <h2 id="course-info"></h2>
+      <button id="teacher-info" class="teacher">
+        <img src="" alt="Teacher Image">
+        <span id="teacher-name" ></span>
+      </button>
+
+      <script>
+        document.getElementById("teacher-info").addEventListener("click", function() {
+          window.open("data.html", "_blank");
+        });
+      </script>
+
+      <h4><strong>課程描述</strong></h4>
+      <p>很多人在面對醫生的時候無法很清楚的用英語描述自己哪裏不舒服和自己的感覺。
+        <br>這堂課可以很好的幫助大家就算在國外看醫生也可以很好的描述滋生的感覺讓醫生可以更好的對症下藥！</p>
+      <iframe src="./data.html" width=100% height=800 frameBorder=0 title="Embedded Page"></iframe>
+    </div>
+    <script>
+      function GoClass(){
+        sessionStorage.setItem("Class" , "MedicalEnglish")
+        window.location.href="./VideoCallPage.html"
+      }
+    </script>
+    <button id="open-course-button" onclick="GoClass()"><strong>開始上課！</strong></button>
+    <!--<button id="open-course-button" onclick="openCourse()"><strong>開始上課！</strong></button>-->
+  </div>
+  <script>
+    var courseData = {
+      "Course 1": {
+        teacherName: "陳老師",
+        teacherImage: "image/victor.png",
+        Course: "瞭解你自己的英語程度"
+      },
+      "Course 2": {
+        teacherName: "蔡老師",
+        teacherImage: "image/victor.png",
+        Course: "醫療用語教學"
+      },
+      "Course 3": {
+        teacherName: "林老師",
+        teacherImage: "image/victor.png",
+        Course: "商業英文"
+      }
+    };
+
+    function showInfo(courseNumber) {
+      var courseName = "Course " + courseNumber;
+
+      if (courseData[courseName]) {
+        var teacherInfo = courseData[courseName];
+        document.getElementById("teacher-name").textContent = teacherInfo.teacherName;
+        document.getElementById("teacher-info").querySelector("img").src = teacherInfo.teacherImage;
+        document.getElementById("course-info").textContent = teacherInfo.Course;
+        document.getElementById("sidebar").classList.remove("hidden");
+      }
+    }
+  </script>
+</body>
+</html>

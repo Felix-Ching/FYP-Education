@@ -1,0 +1,83 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#videos{
+    display: grid;
+    grid-template-columns: 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.video-player{
+    background-color: black;
+    width: 100%;
+    height: 100%;
+}
+
+#user-2{
+    display: true;
+}
+
+.smallFrame{
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    height: 170px;
+    width: 300px;
+    border-radius: 5px;
+    border: 2px solid blue;
+    -webkit-box-shadow: 3px 3px 15px -1px rgba(0,0,0,0.77);
+    box-shadow: 3px 3px 15px -1px rgba(0,0,0,0.77);
+    z-index: 999;
+}
+
+#controls{
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1em;
+}
+
+.control-container{
+    background-color: blue;
+    padding: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.control-container img{
+    height: 30px;
+    width: 30px;
+}
+
+#leave-btn{
+    background-color: red;
+}
+
+/* 新增的樣式 */
+
+#user-2.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+#screen-share-container {
+    position: absolute;
+    top: 50px; /* 距離頂部的距離 */
+    left: 50px; /* 距離左側的距離 */
+    width: 400px; /* 容器寬度 */
+    height: 300px; /* 容器高度 */
+    z-index: 1; /* 確保屏幕分享在視訊畫面上方顯示 */
+    overflow: hidden; /* 隱藏溢出部分 */
+}

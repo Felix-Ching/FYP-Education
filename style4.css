@@ -1,0 +1,89 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+#leftbar{
+  background-color: #f5f2ff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  color: grey;
+  width: 5%;
+  padding: 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0px;
+  height: 100%;
+}
+#leftbar img{
+    max-width:50px;
+    max-height:50px;
+    margin-right:20px;
+    margin-left:-2px;
+    border-radius:50%;
+    object-fit:cover;
+    box-shadow: 0 0 0 5px white;
+}
+.logout{
+    position: fixed;
+    bottom:10px;
+    left:15px;
+    padding:10px;
+}
+.logout button{
+    background:none;
+    outline:none;
+    border:none;
+}
+.logout button:hover{
+    background-color:white;
+    border-radius:45%;
+    box-shadow: 0 0 5px rgba(61, 3, 0, 0.5);
+    transition:0.5s;
+    transform: scale(1.2);
+}
+/*
+.midbar {
+  background-color: #fff;
+  width:90%;
+  margin: 20px 70px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  display:flex;
+  flex-direction: column; /* 设置主轴方向为垂直 
+  align-items: right; /* 在主轴方向上居中对齐 
+}
+*/
+.content {
+  background-color: #f5f7f7;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.ppt-header{
+    display: flex;
+}
+
+#download-button {
+  padding:5px;
+  background-color: darkred;
+  color: #fff;
+  border: none;
+  padding: 10px 5px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 20px;
+  width:10%;
+}
+#download-button:hover{
+    background-color:red;
+    transition:0.5s;
+    transform: scale(1.02);
+}
+
+

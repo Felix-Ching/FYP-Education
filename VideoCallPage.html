@@ -1,0 +1,238 @@
+<!DOCTYPE html >
+<header>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Permissions-Policy" content="display-capture=(self); microphone = (self)">
+    <meta allow="display-capture">
+    <title>VideoCall</title>
+    <meta name ='viewport' content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="VideoCall.css">
+</head>
+<body>
+    <style>
+        .videos{
+            display:flex;
+            flex-direction: row;
+            position: relative;
+            background-color:white;
+        }
+        #user-1{
+            width: 30%;
+            height: 20% ;
+            bottom: 1px;
+            right: 1px;
+            border: 1px solid #ccc;
+            position: absolute;
+        }
+        #user-2 {
+            border: 1px solid black; /* Add a border around the video element */
+            z-index:-1;
+            position:fixed;
+            float:right;
+            background-color:white;
+            /* Add more custom styles as needed */
+        }
+        #text{
+            background-color:white;
+            top: 0;
+            left: 0;
+            flex: 3;
+            width: 30%;
+            height: 100%;
+            border: none; /* Remove iframe border */
+            z-index:10;
+            position:fixed;
+            float:left;
+        }
+    </style>
+    <script defer type="module">
+        import {Peer} from "https://esm.sh/peerjs@1.5.4?bundle-deps"
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+        import { getFirestore ,  getDocs , setDoc, collection , query , where ,doc ,deleteDoc, getCountFromServer , count , updateDoc} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"
+        import {firebaseConfig} from "./modules/firebaseConfig.js"
+        import {peerJsConfig} from "./modules/peerJsConfig.js"
+        const peer = new Peer(peerJsConfig)
+        //const peerID = sessionStorage.getItem("peer.id")
+        const peerOpen =  peer.on('open', function(id) {
+            console.log('My peer ID is: ' + id);
+        });
+    
+        const db = getFirestore(initializeApp(firebaseConfig));
+        const oClass = sessionStorage.getItem("class") || "MedicalEnglish";
+        console.log(oClass)
+
+        let user1 = document.getElementById('user-1');
+        let user2 = document.getElementById('user-2');
+        var peerConnRef;
+    
+        let getUM = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia || navigator.mediaDevices || window.navigator.mediaDevices.getUserMedia
+        
+        if ((navigator.mediaDevices && 'getDisplayMedia' in navigator.mediaDevices)) {
+            console.log("getDisplayMedia Support")
+            } else {
+            console.log('getDisplayMedia is not supported');
+        }
+        
+        peer.on('disconneted' , ()=>{
+            console.log("disconnected")
+        })
+
+        async function peerIn(){
+            console.log("peerIn" , peer.id)
+            let dbSize = await getCountFromServer(query( collection(db, oClass)  , where("Status" , "==" , false)))
+            .then((temp)=>{return temp.data().count });
+            console.log("Available Room:" , dbSize)
+            let selfRoom = doc(db , oClass , "ROOM"+dbSize)
+            window.selfRoom = selfRoom;
+            await setDoc(selfRoom , {
+                ID: peer.id ,
+                Organizer: "Testing" ,
+                Status: false
+            });
+            navigator.mediaDevices.getDisplayMedia({video: true, audio: true})
+            .then( (stream)=> {
+                user1 = document.getElementById('user-1');
+                user1.srcObject = stream;
+                user1.play();
+                    peer.on('call', function(call) {    
+                        console.log("call recv")
+                        call.answer(stream); // Answer the call with an A/V stream.
+                        updateDoc(selfRoom , { Status: true})
+                        call.on('stream', function(remoteStream) {
+                            // Show stream in some video/canvas element.
+                            //call.answer(stream)
+                            console.log("stream Recv")
+                            user2.srcObject = remoteStream;
+                            user2.play();
+                        });
+                    }, function(err) {
+                        console.log('Failed to get local stream' ,err);
+                        console.log(adapter.browserDetails.browser)
+                    });
+            });
+        }
+        
+        async function peerOut(){
+            console.log("peerOut:")
+            let ID = "0";
+            if( sessionStorage.getItem("peerID") == undefined ){    
+                const qR = await getDocs(query( collection(db, oClass) ) , where("status" , "==" , false));
+                qR.forEach((doc)=>{
+                    console.log(doc.id, " => ", doc.data());
+                })
+                const NO = Math.floor( Math.random() * (qR.size-1) );
+                //console.log(qR.size)
+                console.log("NO:" ,NO);
+                let count =0
+                qR.forEach((doc) =>{
+                    if(count == NO){
+                        ID = doc.data().ID;  //Use in test
+                        //peerConnRef = mediaConn( doc.ID , getUserMedia );  //Use in release
+                        console.log("doc.ID:", ID)
+                        return;
+                    }else count++
+                })
+            }else{
+                ID = sessionStorage.getItem("peerID")||ID
+            }
+            navigator.mediaDevices.getDisplayMedia({video: true , audio: true})
+            .then((localstream) => {
+                // Show stream in some video/canvas element.
+                    //window.stream = localstream;
+                    user1.srcObject = localstream;
+                    user1.play();
+                    console.log("call start")
+                    let remotePeer = peer.call(ID , localstream);
+                    console.log("remotePeer" , peer.connections)
+                    remotePeer.on("stream" , function(remoteStream){
+                        user2.srcObject = remoteStream
+                        user2.play();
+                    }),function(connectErr){
+                        console.log("Fail to connect" , connectErr)
+                    }
+            }).catch( function(err) {
+              console.log('Failed to get local stream' ,err);
+            });
+        }
+    
+        const hangUp = function(){
+            peer.destroy();
+            if(sessionStorage.getItem("type") == "Teacher") {
+                deleteDoc(window.selfRoom);
+            }
+        }
+        document.getElementById("leave-btn").addEventListener("click" , hangUp)
+    
+        document.getElementById("screen-btn").addEventListener("click" ,function(){
+            console.log("autoRun")
+            switch(sessionStorage.getItem("type")){
+                case "Teacher":{
+                    peerIn();
+                }
+                break;
+                case "Student":{peerOut();break;}
+                default: peerOut()
+            }
+        }); 
+        peer.on('close', () => {
+            console.log('Connection is closed');
+        });
+
+        // Event handler for connection error
+        peer.on('error', (error) => {
+            console.error('Connection error:', error);
+        });       
+    </script>
+    
+    <div id="videos">
+        <iframe id="text"></iframe>
+        <script>
+            const synth = window.speechSynthesis;
+            if (synth.getVoices().length > 0) {
+                // Voices are available
+                console.log('Voices are available:');
+                synth.getVoices().forEach(voice => {
+                    console.log(voice.name);
+                });
+            } else {
+                console.log('No voices available.');
+            }
+            textFrame = document.getElementById("text")
+            textFrame.src="./"+sessionStorage.getItem("Class")+".txt"
+            
+            textFrame.contentWindow.document.body.addEventListener("mouseup" , function(){
+                let selectedT = window.getSelection().toString();
+                if(selectedT){
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance(selectedT))
+                }
+            })
+        </script>
+        <video class="video-player" id="user-1" autoplay playsinline></video>
+        <video class="video-player" id="user-2" autoplay playsinline></video>
+        <div id="screen-share-container"></div> <!-- 新增的容器用於顯示屏幕分享 -->
+    </div>
+
+    <div id='controls'>
+        <!-- 視訊畫面中的相機開關按鈕 -->
+        <div class="control-container" id='camera-btn'>
+            <img src="icon/camera.png"/>
+        </div>
+        <!-- 視訊畫面中的麥克風開關按鈕 -->
+        <div class="control-container" id="mic-btn">
+            <img src="icon/mic.png"/>
+        </div>
+        <!-- 視訊畫面中的分享螢幕開關按鈕 -->
+        <div class="control-container" id='screen-btn'>
+            <img src="icon/screen.png"/>
+        </div>
+        <!-- 視訊畫面中的挂電話按鈕 -->
+        <div class="control-container" id='leave-btn'>
+            <img src="icon/phone.png"/>
+        </div>
+    </div>
+</body>
+<!--<script src="agora-rtm-sdk-1.4.4.js"></script>-->
+<!--<script src="videoCall.js"></script>-->
+</html>

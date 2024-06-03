@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>PeerChat</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='lobby.css'>
+</head>
+<body>
+    <script defer type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+        import { getFirestore ,  getDocs , collection , query , where ,doc} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"
+        import {firebaseConfig} from "./modules/firebaseConfig.js"
+        import {print_Room} from "./modules/fs-printRoom.js"
+        const db = getFirestore(initializeApp(firebaseConfig));
+        const oClass = sessionStorage.getItem("class") || "MedicalEnglish"
+        const qR = await getDocs(query( collection(db, oClass) ) , where("Status" , "==" , false));
+
+        const listRoom = document.getElementById("dynamicDropdown");
+        listRoom.addEventListener("click" , print_Room(listRoom , qR))
+        
+        function connectPeer(e){
+            e.disabled = true
+            sessionStorage.setItem("peerID" , e.value)
+            window.location.heref = "./VideoCallPage.html"
+        }
+
+        //listRoom.addEventListener("change" , connectPeer(listRoom))
+    </script>  
+    <main id="lobby-container">
+        <div id="form-container">
+            <div id="form__container__header">
+                <p>歡迎！請輸入您的房間號！</p>
+            </div>
+            <select id="dynamicDropdown" onchange="connectPeer(this)" text="Select">
+                <option value="idk" selected>Select an option</option>
+            </select> 
+            <script>
+                function connectPeer(e){
+                    e.disabled = true
+                    sessionStorage.setItem("peerID" , e.value)
+                    window.location.href = "./VideoCallPage.html"
+                }
+            </script>          
+            <div id="form__content__wrapper">
+                <form id="join-form">
+                    <input type="text" name="invite_link" required/>
+                    <input type="submit" value="Join Room" />
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>FYP</p>
+    </footer>
+</body>
+<script>
+    let form = document.getElementById('join-form')
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        let inviteCode = e.target.invite_link.value
+        window.location = `index.html?room=${inviteCode}`
+    })
+</script>
+
+</html>

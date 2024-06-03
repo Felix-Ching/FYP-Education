@@ -1,0 +1,161 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+h1{
+    color:grey;
+    margin: 20px 120px;
+}
+.course {
+  background-color: #fff;
+  width:35%;
+  margin: 20px 120px;
+  padding: 20px;
+  border-radius: 25px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  display:flex;
+}
+.course img{
+    max-width:250px;
+    height:auto;
+    margin-right:20px;
+    margin-left:-10px;
+    border-radius:10px;
+}
+.course text-info {
+    flex:1;
+}
+.text-info h2{
+    margin-bottom:5px;
+    font-size:20px;
+    color:black;
+}
+.text-info p{
+    color:grey;
+    margin-top:5px;
+    font-size:14px;
+}
+
+.info-button {
+  background-color: darkred;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+#leftbar{
+  background-color: #f5f2ff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  color: grey;
+  width: 5%;
+  padding: 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0px;
+  height: 100%;
+}
+#leftbar img{
+    max-width:50px;
+    max-height:50px;
+    margin-right:20px;
+    margin-left:-2px;
+    border-radius:50%;
+    object-fit:cover;
+    box-shadow: 0 0 0 5px white;
+}
+.logout{
+    position: fixed;
+    bottom:10px;
+    left:15px;
+    padding:10px;
+}
+.logout button{
+    background:none;
+    outline:none;
+    border:none;
+}
+.logout button:hover{
+    background-color:white;
+    border-radius:45%;
+    box-shadow: 0 0 5px rgba(61, 3, 0, 0.5);
+    transition:0.5s;
+    transform: scale(1.2);
+}
+#sidebar {
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  color: grey;
+  width: 40%;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  right: 0px;
+  height: 100%;
+  transition: right 0.3s;
+}
+.hidden {
+  right: -300px;
+}
+#sidebar img{
+    max-width:100%;
+    height:auto;
+    margin-right:20px;
+    margin-left:0px;
+    border-radius:10px;
+}
+
+#open-course-button {
+  position: fixed;
+  bottom:10px;
+  right:35px;
+  padding:10px;
+  background-color: darkred;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-top: 20px;
+  width:35%;
+}
+#open-course-button:hover{
+    background-color:red;
+    transition:0.5s;
+    transform: scale(1.02);
+}
+#course-info{
+    font-weight: bold;
+}
+
+.teacher img {
+    max-width: 23px;
+    max-height: 23px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border-radius: 50%;
+    object-fit: cover;
+    transform: scale(1.2);
+}
+#teacher-name{
+    color:black;
+}
+.class-info button{
+    background:none;
+    border-radius:50px;
+    outline: none;
+    width:180px;
+    height:40px;
+    outline:none;
+    border:none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+
+
+
+

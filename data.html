@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style4.css">
+    <title>Preview .docx File</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="midbar">
+        <div class="teacher info">
+            <h2><strong>授課老師資訊</strong></h2>
+            <div class="content">
+                <p>名字：陳老師</p>
+                <p>聯絡方式：hyegaa1113@gmail.com</p>
+                <p>上課時間：(二) 13：00 ~ 15：00</p>
+            </div>
+        </div>
+
+        <div class="class info">
+            <h2><strong>課程資訊</strong></h2>
+            <div class="content">
+                <p>課程目的在於幫助學生能夠透過角色扮演的方式與老師進行模擬看病的過程，從中學習到如何使用英語描述自己的病症，
+                    以應對在國外看病因語言不通之困境。</p>
+            </div>
+        </div>
+
+        <div class="class target">
+            <h2><strong>課程目標</strong></h2>
+            <div class="content">
+                <p>☑ 掌握基本醫學術語</p>
+                <p>☑ 掌握緊急情況英語</p>
+                <p>☑ 了解基礎醫療設施和設備名稱</p>
+                <p>☑ 學會描述身體部位和相關症狀</p>
+                <p>☑ 學會與醫生進行溝通</p>
+            </div>
+        </div>
+
+        <div class="ppt">
+            <div class="ppt-header">
+                <h2><strong>課程教材</strong></h2>
+                <button id="download-button" onclick="previewDocx()">下載檔案</button>
+            </div>
+            <div class="content">
+                <p>同學可于上課前自行下載閲讀，若有任何問題可在上課期間詢問授課老師。</p>
+            </div>
+
+            <div class="download">
+                <script>
+                    function previewDocx() {
+                        var filePath = 'A Script of a common clinic visit.docx';
+
+                        fetch(filePath)
+                            .then(response => response.blob())
+                            .then(blob => {
+                                var blobUrl = URL.createObjectURL(blob);
+                                window.location.href = blobUrl;
+                            })
+                            .catch(error => {
+                                console.error('Error fetching file:', error);
+                            });
+                    }
+                </script>
+             </div>
+        </div>
+
+    </div>
+</body>
+</html>

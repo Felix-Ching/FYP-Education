@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style4.css">
+    <title>Preview .docx File</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <div id="leftbar">
+      <img src="image/profile.jpg" alt="profile">
+       <div class="logout">
+         <a href="login.html">
+         <button type="submit" class="btn btn-default btn-sm">
+         <span class="glyphicon glyphicon-log-out"></span></button></a>
+      </div>
+    </div>
+
+  </header>
+
+    <button onclick="previewDocx()">Preview .docx File</button>
+
+    //download .docx
+    <script>
+        function previewDocx() {
+            // 替换 YOUR_FILE_PATH_HERE 为实际的文件路径
+            var filePath = 'A Script of a common clinic visit.docx';
+
+            fetch(filePath)
+                .then(response => response.blob())
+                .then(blob => {
+                    // 创建一个 blob URL
+                    var blobUrl = URL.createObjectURL(blob);
+
+                    // 打开一个新的窗口并将 blob URL 分配给新窗口的位置
+                    var newWindow = window.open();
+                    newWindow.location.href = blobUrl;
+                })
+                .catch(error => {
+                    console.error('Error fetching file:', error);
+                });
+        }
+    </script>
+</body>
+</html>
