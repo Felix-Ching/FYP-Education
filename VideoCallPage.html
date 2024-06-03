@@ -41,10 +41,12 @@
             flex: 3;
             width: 30%;
             height: 100%;
-            border: none; /* Remove iframe border */
-            z-index:10;
+            /*border: none; /* Remove iframe border */
+            z-index:2;
             position:fixed;
             float:left;
+            overflow: auto; /* Add scrollbars if content overflows */
+            white-space: pre-wrap; /* Wrap text and preserve spaces */
         }
     </style>
     <script defer type="module">
@@ -71,15 +73,14 @@
         
         if ((navigator.mediaDevices && 'getDisplayMedia' in navigator.mediaDevices)) {
             console.log("getDisplayMedia Support")
-            } else {
-            console.log('getDisplayMedia is not supported');
-        }
+            } else console.log('getDisplayMedia is not supported');
         
         peer.on('disconneted' , ()=>{
             console.log("disconnected")
         })
 
         async function peerIn(){
+            if(user1.srcObject == null) return
             console.log("peerIn" , peer.id)
             let dbSize = await getCountFromServer(query( collection(db, oClass)  , where("Status" , "==" , false)))
             .then((temp)=>{return temp.data().count });
@@ -91,30 +92,25 @@
                 Organizer: "Testing" ,
                 Status: false
             });
-            navigator.mediaDevices.getDisplayMedia({video: true, audio: true})
-            .then( (stream)=> {
-                user1 = document.getElementById('user-1');
-                user1.srcObject = stream;
-                user1.play();
-                    peer.on('call', function(call) {    
-                        console.log("call recv")
-                        call.answer(stream); // Answer the call with an A/V stream.
-                        updateDoc(selfRoom , { Status: true})
-                        call.on('stream', function(remoteStream) {
-                            // Show stream in some video/canvas element.
-                            //call.answer(stream)
-                            console.log("stream Recv")
-                            user2.srcObject = remoteStream;
-                            user2.play();
-                        });
-                    }, function(err) {
-                        console.log('Failed to get local stream' ,err);
-                        console.log(adapter.browserDetails.browser)
-                    });
+            peer.on('call', function(call) {    
+                console.log("call recv")
+                call.answer(user1.srcObject); // Answer the call with an A/V stream.
+                updateDoc(selfRoom , { Status: true})
+                call.on('stream', function(remoteStream) {
+                    // Show stream in some video/canvas element.
+                    //call.answer(stream)
+                    console.log("stream Recv")
+                    user2.srcObject = remoteStream;
+                    user2.play();
+                });
+            }, function(err) {
+                console.log('Failed to get remote stream' ,err);
+                console.log(adapter.browserDetails.browser)
             });
         }
         
         async function peerOut(){
+            if(user1.srcObject ==null) return;
             console.log("peerOut:")
             let ID = "0";
             if( sessionStorage.getItem("peerID") == undefined ){    
@@ -137,35 +133,34 @@
             }else{
                 ID = sessionStorage.getItem("peerID")||ID
             }
-            navigator.mediaDevices.getDisplayMedia({video: true , audio: true})
-            .then((localstream) => {
-                // Show stream in some video/canvas element.
-                    //window.stream = localstream;
-                    user1.srcObject = localstream;
-                    user1.play();
-                    console.log("call start")
-                    let remotePeer = peer.call(ID , localstream);
-                    console.log("remotePeer" , peer.connections)
-                    remotePeer.on("stream" , function(remoteStream){
-                        user2.srcObject = remoteStream
-                        user2.play();
-                    }),function(connectErr){
-                        console.log("Fail to connect" , connectErr)
-                    }
-            }).catch( function(err) {
-              console.log('Failed to get local stream' ,err);
-            });
+            console.log("call start")
+            let remotePeer = peer.call(ID , user1.srcObject);
+            console.log("remotePeer" , peer.connections)
+            remotePeer.on("stream" , function(remoteStream){
+                user2.srcObject = remoteStream
+                user2.play();
+            }),function(connectErr){
+                console.log("Fail to connect" , connectErr)
+            }
         }
     
         const hangUp = function(){
             peer.destroy();
-            if(sessionStorage.getItem("type") == "Teacher") {
-                deleteDoc(window.selfRoom);
-            }
+            if(sessionStorage.getItem("type") == "Teacher") deleteDoc(window.selfRoom);
         }
         document.getElementById("leave-btn").addEventListener("click" , hangUp)
+
+        document.getElementById("screen-btn").addEventListener("click" , function(){
+            navigator.mediaDevices.getDisplayMedia({video: true, audio: true})
+            .then( (stream)=> {
+                user1.srcObject = stream;
+                user1.play();
+            }, function(err) {
+                console.log('Failed to get local stream' ,err);
+            });
+        });
     
-        document.getElementById("screen-btn").addEventListener("click" ,function(){
+        document.getElementById("camera-btn").addEventListener("click" ,function(){
             console.log("autoRun")
             switch(sessionStorage.getItem("type")){
                 case "Teacher":{
@@ -186,29 +181,40 @@
         });       
     </script>
     
-    <div id="videos">
-        <iframe id="text"></iframe>
-        <script>
+    <div id="textBlock">
+        <pre id="text"></pre>
+        <script defer>
             const synth = window.speechSynthesis;
-            if (synth.getVoices().length > 0) {
+            if( synth.getVoices().length > 0) {
                 // Voices are available
                 console.log('Voices are available:');
-                synth.getVoices().forEach(voice => {
-                    console.log(voice.name);
-                });
+                console.log(synth.getVoices());
             } else {
                 console.log('No voices available.');
             }
-            textFrame = document.getElementById("text")
-            textFrame.src="./"+sessionStorage.getItem("Class")+".txt"
             
-            textFrame.contentWindow.document.body.addEventListener("mouseup" , function(){
+            textFrame = document.getElementById("text")
+            
+            fetch( (sessionStorage.getItem("Class")||"MedicalEnglish")+".txt")
+                .then(response => response.text())
+                .then(data => {
+                    textFrame.textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error loading the text file:', error);
+                });
+
+            textFrame.addEventListener("mouseup" , function(){
+                console.log("Selected text")
                 let selectedT = window.getSelection().toString();
-                if(selectedT){
-                    window.speechSynthesis.speak(new SpeechSynthesisUtterance(selectedT))
-                }
+                let utterance = new SpeechSynthesisUtterance(selectedT);
+                utterance.voice = window.speechSynthesis.getVoices().find(voice => voice.name === 'English (Great Britain)+Robosoft2')
+                synth.speak(utterance)
             })
         </script>
+    </div>
+
+    <div id="videos">
         <video class="video-player" id="user-1" autoplay playsinline></video>
         <video class="video-player" id="user-2" autoplay playsinline></video>
         <div id="screen-share-container"></div> <!-- 新增的容器用於顯示屏幕分享 -->
