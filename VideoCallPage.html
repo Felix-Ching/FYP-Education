@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="self">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Permissions-Policy" content="display-capture=(self); microphone = (self)">
     <meta allow="display-capture">
@@ -11,50 +12,14 @@
     <link rel="stylesheet" type="text/css" media="screen" href="VideoCall.css">
 </head>
 <body>
-    <style>
-        .videos{
-            display:flex;
-            flex-direction: row;
-            position: relative;
-            background-color:white;
-        }
-        #user-1{
-            width: 30%;
-            height: 20% ;
-            bottom: 1px;
-            right: 1px;
-            border: 1px solid #ccc;
-            position: absolute;
-        }
-        #user-2 {
-            border: 1px solid black; /* Add a border around the video element */
-            z-index:-1;
-            position:fixed;
-            float:right;
-            background-color:white;
-            /* Add more custom styles as needed */
-        }
-        #text{
-            background-color:white;
-            top: 0;
-            left: 0;
-            flex: 3;
-            width: 30%;
-            height: 100%;
-            /*border: none; /* Remove iframe border */
-            z-index:2;
-            position:fixed;
-            float:left;
-            overflow: auto; /* Add scrollbars if content overflows */
-            white-space: pre-wrap; /* Wrap text and preserve spaces */
-        }
-    </style>
-    <script defer type="module">
-        import {Peer} from "https://esm.sh/peerjs@1.5.4?bundle-deps"
+    <!--PDF.js-->
+    <script defer type="module" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.mjs"></script>
+    <script async type="module">
+        import { Peer } from "https://esm.sh/peerjs@1.5.4?bundle-deps"
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
         import { getFirestore ,  getDocs , setDoc, collection , query , where ,doc ,deleteDoc, getCountFromServer , count , updateDoc} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"
-        import {firebaseConfig} from "./modules/firebaseConfig.js"
-        import {peerJsConfig} from "./modules/peerJsConfig.js"
+        import { firebaseConfig } from "./modules/firebaseConfig.js"
+        import { peerJsConfig } from "./modules/peerJsConfig.js"
         const peer = new Peer(peerJsConfig)
         //const peerID = sessionStorage.getItem("peer.id")
         const peerOpen =  peer.on('open', function(id) {
@@ -77,7 +42,12 @@
         
         peer.on('disconneted' , ()=>{
             console.log("disconnected")
+            peer.reconnect()
         })
+
+        let Conn = null;
+
+        let remotePeer = null;
 
         async function peerIn(){
             if(user1.srcObject == null) return
@@ -92,23 +62,35 @@
                 Organizer: "Testing" ,
                 Status: false
             });
-            peer.on('call', function(call) {    
+            peer.on('call', async function(call) {
                 console.log("call recv")
                 call.answer(user1.srcObject); // Answer the call with an A/V stream.
                 updateDoc(selfRoom , { Status: true})
+                remotePeer = call.peer;
+                Conn = peer.connect(remotePeer , {
+                        timeout: 5000 // 10 seconds
+                    });
+                Conn.on("open",()=>{
+                    console.log("connected:" , Conn);
+                })
+                console.log('Received call from peer:', call.peer);
                 call.on('stream', function(remoteStream) {
+                    console.log("Self peerID:",peer.id);
                     // Show stream in some video/canvas element.
-                    //call.answer(stream)
                     console.log("stream Recv")
                     user2.srcObject = remoteStream;
+                    //user1.style.opacity=0;
+                    //user2.style.opacity=1;
+                    user2.style.zIndex = 2;
                     user2.play();
                 });
             }, function(err) {
                 console.log('Failed to get remote stream' ,err);
                 console.log(adapter.browserDetails.browser)
             });
+            queueRenderPage(pageNum);
         }
-        
+
         async function peerOut(){
             if(user1.srcObject ==null) return;
             console.log("peerOut:")
@@ -138,10 +120,14 @@
             console.log("remotePeer" , peer.connections)
             remotePeer.on("stream" , function(remoteStream){
                 user2.srcObject = remoteStream
+                //user1.style.opacity=0;
+                //user2.style.opacity=1;
                 user2.play();
+                user2.style.zIndex=2;
             }),function(connectErr){
                 console.log("Fail to connect" , connectErr)
             }
+
         }
     
         const hangUp = function(){
@@ -165,9 +151,49 @@
             switch(sessionStorage.getItem("type")){
                 case "Teacher":{
                     peerIn();
+                    const sumbitBtn = document.getElementById('submit-btn')
+                    sumbitBtn.addEventListener('click', async() => {
+                        console.log("SumbitBtn clicked");
+                        if(Conn.open){
+                            Conn.send({ 
+                                Command: "Question",
+                                Data: document.getElementById('input').value
+                            });
+                            console.log("Sent",pageNum);
+                        }
+                    })
+                    sumbitBtn.style.visibility = 'visible'
+                    break;
                 }
-                break;
-                case "Student":{peerOut();break;}
+                case "Student":{
+                    peer.on('connection', function(recv){
+                        const dc = recv;
+                        console.log("connection recv")
+                        dc.on('data' , function(data){
+                            //const jsonData = JSON.parse(data);
+                            switch(data.Command){
+                                case "PdfPage":{
+                                    queueRenderPage(data.Data);
+                                    break;
+                                }
+                                case "Question":{
+                                    document.getElementById('input').style.height = `${25}%`;
+                                    const span = document.createElement('span');
+                                    span.textContent = data.Data;
+                                    span.id = "question";
+                                    document.getElementById('text').appendChild(span);
+                                    break;
+                                }
+                                default:console.log('Received', data);
+                            }
+                        });
+                        console.log("packet detected" , recv);
+                    });
+                    //document.getElementById('question').
+                    console.log("connection listener build")
+                    peerOut();
+                    break;
+                }
                 default: peerOut()
             }
         }); 
@@ -178,10 +204,224 @@
         // Event handler for connection error
         peer.on('error', (error) => {
             console.error('Connection error:', error);
-        });       
+        });
+
+        //PDF!
+
+        // If absolute URL from the remote server is provided, configure the CORS
+        // header on that server.
+        
+        // Loaded via <script> tag, create shortcut to access PDF.js exports.
+        let { pdfjsLib } = globalThis;
+        
+        // The workerSrc property shall be specified.
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.mjs';
+        
+        let pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 3.5,
+            canvas = document.getElementById('the-canvas'),
+            ctx = canvas.getContext('2d');
+        
+        /**
+         * Get page info from document, resize canvas accordingly, and render page.
+         * @param num Page number.
+         */
+        function renderPage(num) {
+            pageRendering = true;
+            // Using promise to fetch the page
+            pdfDoc.getPage(num).then(function(page) {
+                let viewport = page.getViewport({scale: scale});
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+            
+                // Render PDF page into canvas context
+                let renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                let renderTask = page.render(renderContext);
+            
+                // Wait for rendering to finish
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    pageNum = num;
+                    if (pageNumPending !== null) {
+                    // New page rendering is pending
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                    }
+                });
+            });
+        
+            // Update page counters
+            document.getElementById('page_num').textContent = num;
+        }
+        
+        /**
+         * If another page rendering in progress, waits until the rendering is
+         * finised. Otherwise, executes rendering immediately.
+         */
+        function queueRenderPage(num) {
+            if(Conn !==null){
+                if(Conn.open){
+                    Conn.send({ 
+                        Command: "PdfPage",
+                        Data: pageNum 
+                    });
+                    console.log("Sent",pageNum);
+                };
+            }
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+        
+        /**
+         * Displays previous page.
+         */
+        function onPrevPage() {
+            if (pageNum <= 1) {
+            return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('prev').addEventListener('click', onPrevPage);
+        
+        /**
+         * Displays next page.
+         */
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('next').addEventListener('click', onNextPage);
+
+        /**
+         * Asynchronously downloads PDF.
+         */
+        pdfjsLib.getDocument({
+            url: 'Document/MySQL.pdf',
+            disableRange: true,
+            disableStream: true,
+            disableAutoFetch: true,
+            useWorkerFetch: true,
+            enableHWA: true
+        }).promise.then(function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page_count').textContent = pdfDoc.numPages;
+            // Initial/first page rendering
+            queueRenderPage(1);
+        });
+
+        //reload pdf page
+        document.getElementById('the-canvas').addEventListener('click', ()=>{
+            queueRenderPage(pageNum)
+            console.log("Reload")
+        })
     </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.mjs.map" type="application/json"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.mjs.map" type="application/json"></script>
     
-    <div id="textBlock">
+    <!--PDF-->
+    <style>
+        #PDF-Block{
+            left:0;
+            position: fixed;
+            z-index:3
+        }
+        #the-canvas {
+            border: 1px solid black;
+            direction: ltr;
+            z-index:3;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width:40%;
+            height:60%;
+        }
+        #pdf-ctl{
+            position:fixed;
+            top: 60%;
+            left:15%;
+            z-index:4;
+        }
+        #prev{
+            position: fixed;
+            top: 60%;
+            left:10%;
+            z-index:4;
+        }
+        #next{
+            position: fixed;
+            top: 60%;
+            left:25%;
+            z-index:4;
+        }
+    </style>
+    <div id="PDF-Block">
+        <canvas id="the-canvas" overflow="auto"></canvas>
+        <div id="pdf-ctl">
+            <button id="prev">Previous</button>
+            &nbsp; &nbsp;
+            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+            <button id="next">Next</button>
+        </div>
+        <!-- Create a button to submit the input -->
+        <button id="submit-btn">send</button>
+    </div>
+    <div id="text" overflow="auto" flex=1>
+        <!-- Create a text input field -->
+        <input type="text" id="input" placeholder="Enter your note here">
+    </div>
+    <script>
+
+    </script>
+    <style>
+        #text{
+            position:relative
+        }
+        #input{
+            position: fixed;
+            bottom:0;
+            left:0%;
+            z-index:0;
+            width: 40%;
+            height: 35%;
+            box-sizing: border-box;
+        }
+        #submit-btn{
+            position: fixed;
+            top: 60%;
+            left:35%;
+            z-index:4;
+        }
+        #question{
+            position: fixed;
+            bottom: 25%;
+            left: 0;
+            width: 40%;
+            height:10%;
+            box-sizing: border-box;
+            display: block;
+            border: 1px solid black;
+        }
+    </style>
+    <!--<div>
+      <button id="prev">Previous</button>
+      <button id="next">Next</button>
+      &nbsp; &nbsp;
+      <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+    </div>-->    
+    <!--<div id="textBlock">
         <pre id="text"></pre>
         <script defer>
             const synth = window.speechSynthesis;
@@ -212,10 +452,25 @@
                 synth.speak(utterance)
             })
         </script>
-    </div>
-
-    <div id="videos">
-        <video class="video-player" id="user-1" autoplay playsinline></video>
+    </div>-->
+    <style>
+        #user-1{
+            /*opacity: 1;*/
+            z-index:1;
+            position: fixed;
+            right: 0;
+            width:60%;
+        }
+        #user-2{
+            /*opacity: 0;*/
+            z-index:0;
+            position: fixed;
+            right: 0;
+            width:60%;
+        }
+    </style>
+    <div id="videos" >
+        <video class="video-player" id="user-1" autoplay playsinline muted></video>
         <video class="video-player" id="user-2" autoplay playsinline></video>
         <div id="screen-share-container"></div> <!-- 新增的容器用於顯示屏幕分享 -->
     </div>
@@ -238,7 +493,64 @@
             <img src="icon/phone.png"/>
         </div>
     </div>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        //saveAs(blob, "hello world.txt");
+        //deny student to control pdf page
+        if(sessionStorage.getItem("type") !== "Teacher"){
+            button = document.getElementById("prev");
+            button.style.display = "none";
+            button.disabled = true;
+            button = document.getElementById("next");
+            button.style.display = "none";
+            button.disabled = true;
+            onNextPage = onPrevPage = null;
+            //download text(uncomplete)
+            // Add an event listener to the button
+            const sumbitBtn = document.getElementById('submit-btn')
+            sumbitBtn.addEventListener('click', async() => {
+                try{
+                    // Get the user-inputted text
+                    let userInput = document.getElementById('input').value;
+                    // create a new handle
+                    const newHandle = await showSaveFilePicker({
+                        suggestedName: sessionStorage.getItem("class") + '.txt',
+                        types: {
+                            description: 'Text documents',
+                            accept: {
+                            'text/plain': ['.txt'],
+                            },
+                        },
+                    });
+
+                    // create a FileSystemWritableFileStream to write to
+                    const writableStream = await newHandle.createWritable();
+
+                    // write our file
+                    await writableStream.write(userinput);
+
+                    // close the file and write the contents to disk.
+                    await writableStream.close();
+                }catch(err){
+                    console.log(err)
+                    console.log("Will use <a> to download")
+                    //console.log(document.getElementById('input').value)
+                    //const blob = new Blob([document.getElementById('input').value.toString()] , {type: 'text/plain'});
+                    const blob = new Blob([await document.getElementById('input').value], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = sessionStorage.getItem("class") + "'s Notes" + '.txt';
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                };
+            })
+            sumbitBtn.textContent = "Download"
+            sumbitBtn.style.visibility = 'visible'
+        }
+    </script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js.map" type="application/json"></script>
 </body>
-<!--<script src="agora-rtm-sdk-1.4.4.js"></script>-->
-<!--<script src="videoCall.js"></script>-->
 </html>

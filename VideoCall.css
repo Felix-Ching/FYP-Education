@@ -41,6 +41,7 @@
     transform: translateX(-50%);
     display: flex;
     gap: 1em;
+    z-index: 9999
 }
 
 .control-container{

@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Sidebar section */
+.sidebar {
+    background-color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px; /* 調整了寬度以減少突出 */
+    height: 100vh;
+    padding: 20px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.avatar-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.avatar {
+    width: 80px; /* 調整頭像大小 */
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.logout-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Main content section */
+.content {
+    margin-left: 150px; /* 調整為與 sidebar 一致的寬度 */
+    flex-grow: 1;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #990000;
+    padding: 15px;
+    color: white;
+    width: calc(100vw - 150px); /* 減去 sidebar 的寬度，確保 header 填滿剩餘空間 */
+    position: fixed;
+    top: 0;
+    left: 150px;
+    z-index: 100;
+}
+
+.class-details h1 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.class-details p {
+    font-size: 14px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.header-btn {
+    background-color: #990000;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.text-preview {
+    margin-top: 80px; /* 確保文本內容不會被 header 擋住 */
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 70%; /* 調整寬度使其居中 */
+    margin-left: 200px; /* 調整 margin-left 以使文本位於正確位置 */
+    overflow-y: auto;
+    height: calc(100vh - 100px); /* 調整高度以使其與視窗相符 */
+}
+
+.reminder {
+    background-color: #dff0d8;
+    padding: 10px;
+    border-radius: 5px;
+    color: #3c763d;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.scroll-box {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.scroll-box h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.scroll-box p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.preview {
+    width:80%;
+    height:80%;
+}

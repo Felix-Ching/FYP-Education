@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <link rel="stylesheet" type="text/css" href="style5.css">
+  <title>Class Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+  <header>
+    <script>
+      sessionStorage.setItem("class" , "MedicalEnglish");
+    </script>
+    <div id="leftbar">
+      <img src="image/profile.jpg" alt="profile">
+       <div class="logout">
+         <button type="submit" class="btn btn-default btn-sm" onclick="showModal()">
+         <span class="glyphicon glyphicon-log-out"></span></button></a>
+      </div>
+      </div>
+      <div id="logoutModal" class="modal">
+        <h3>你確定要登出嗎？</h3>
+        <div class="modal-buttons">
+          <button class="yes-btn" onclick="confirmLogout()">是</button>
+          <button class="no-btn" onclick="closeModal()">否</button>
+        </div>
+      </div>
+
+      <script>
+        // 顯示彈窗
+        function showModal() {
+          document.getElementById('logoutModal').style.display = 'block';
+        }
+
+        // 關閉彈窗
+        function closeModal() {
+          document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        // 確認登出，跳轉到登入頁面
+        function confirmLogout() {
+          window.location.href = 'login.html'; // 假設返回到登入頁面
+        }
+      </script>
+    <div id="upperbar">
+    </div>
+  </header>
+
+  <div class="upperpic">
+    <div class="overlay">
+      <h2><strong>瞭解你自己的英語程度</strong></h2>
+      <button class="intoClass" ><strong>進入房間</strong></button>
+    </div>
+  </div>
+
+  <div class="openMaterial">
+    <div class="text-info">
+      <p><strong>上課時間：09/24 10:00a.m. - 12:00p.m.</strong></p>
+      <button class="openM">開啓教材</button>
+    </div>
+  </div>
+  <div class="openMaterial">
+    <div class="text-info">
+      <p><strong>上課時間：09/27 10:00a.m. - 12:00p.m.</strong></p>
+      <button class="openM">開啓教材</button>
+    </div>
+  </div>
+  <div class="openMaterial">
+    <div class="text-info">
+      <p><strong>上課時間：10/01 10:00a.m. - 12:00p.m.</strong></p>
+      <button class="openM">開啓教材</button>
+    </div>
+  </div>
+  <div class="openMaterial">
+    <div class="text-info">
+      <p><strong>上課時間：10/05 10:00a.m. - 12:00p.m.</strong></p>
+      <button class="openM">開啓教材</button>
+    </div>
+  </div>
+
+  <div class="teacherAnnoucement">
+    <div class="text-info">
+      <p><strong>教師備注:</strong></p>
+    </div>
+    <div class="notice-board" id="noticeBoard">
+    </div>
+    <div class="input-area" id="input-area">
+      <input type="text" id="userInput" placeholder="請輸入公告内容">
+    </div>
+    <div class="button-group" id="button-group">
+      <button class="uplaodNotice" id="uploadNotice">提交公告</button>
+      <!--<button class="deleteNotice" onclick="clearNotices()">清空公告栏</button>-->
+    </div>
+  </div>
+
+<script defer type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js'
+    import { getDatabase , ref, set , onValue} from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js'
+    import { firebaseConfig } from "./modules/firebaseConfig.js"
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    // Initialize Realtime Database and get a reference to the service
+    const database = getDatabase(app);
+
+    let addNotice = function(){
+      console.log("addNotice")
+      let input = document.getElementById("userInput").value;
+      console.log('Announcement/' + sessionStorage.getItem("class") + '/' + Date.now())
+      set(ref(database,'Announcement/' + sessionStorage.getItem("class") + '/' + Date.now()),{
+        context:input
+      })
+      console.log("done")
+    }
+    document.getElementById("uploadNotice").addEventListener("click" , addNotice)
+
+    const noticeBoard = document.getElementById("noticeBoard");
+    onValue(ref(database, 'Announcement/' + sessionStorage.getItem("class") ), (snapshot) => {
+      console.log(snapshot);
+      noticeBoard.innerHTML="";
+      snapshot.forEach((data)=>{
+        console.log(data.val().context)
+        const block = document.createElement("div");
+        block.textContent = data.val().context;
+        noticeBoard.appendChild(block)
+      })
+    },{
+      onlyOnce:false
+    })
+
+    if(sessionStorage.getItem('type')!=="Teacher"){
+      addNotice = null;
+      document.getElementById("input-area").remove();
+      document.getElementById("button-group").remove();
+    }
+    /*function addNotice() {
+        var input = document.getElementById("userInput").value;
+        if (input.trim() === "") {
+            alert("请输入公告内容！");
+            return;
+        }
+
+        var noticeBoard = document.getElementById("noticeBoard");
+        var newNotice = document.createElement("p");
+        newNotice.textContent = input;
+        noticeBoard.appendChild(newNotice);
+
+        // 清空输入框
+        document.getElementById("userInput").value = "";
+    }
+
+    function clearNotices() {
+        var noticeBoard = document.getElementById("noticeBoard");
+        if (noticeBoard.innerHTML.trim() === "") {
+            alert("公告栏已经是空的了！");
+            return;
+        }
+        if (confirm("确定要清空所有公告吗？")) {
+            noticeBoard.innerHTML = "";
+        }
+    }*/
+</script>
+
+</body>
+</html>

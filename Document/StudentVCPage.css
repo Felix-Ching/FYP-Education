@@ -1,0 +1,131 @@
+/* 全局設置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+  }
+  
+  .student-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 左右兩個區域各占 50% */
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* 左半邊：PPT 和 筆記區 */
+  .left-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0e5df;
+    padding: 20px;
+    border-radius: 8px;
+    height: 50%;
+  }
+  
+  .note-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    height: 50%;
+  }
+  
+  .note-section textarea {
+    width: 100%;
+    height: calc(100% - 40px); /* 確保輸入框佔據筆記區 */
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    resize: none;
+  }
+  
+  .download-btn {
+    padding: 10px;
+    background-color: #b71c1c;
+    color: white;
+    border: none;
+    border-radius: 8px; /* 圓潤的直角 */
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .download-btn:hover {
+    background-color: #a31515;
+  }
+  
+  /* 右半邊：視訊和控制按鈕 */
+  .right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .video-frame {
+    width: 100%;
+    height: 80%;
+    background-color: #000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    font-size: 24px;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .action-btn {
+    background-color: #8b0000;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .action-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .action-btn:hover {
+    background-color: #a31515;
+  }
+  
+  
+

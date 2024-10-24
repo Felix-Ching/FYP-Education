@@ -1,0 +1,326 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+h1{
+    color:grey;
+    margin: 20px 120px;
+}
+
+
+.course {
+  background-color: #fff;
+  width:35%;
+  margin: 20px 120px;
+  padding: 20px;
+  border-radius: 25px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  display:flex;
+}
+.course img{
+    max-width:250px;
+    height:auto;
+    margin-right:20px;
+    margin-left:-10px;
+    border-radius:10px;
+}
+.course text-info {
+    flex:1;
+}
+.course:first-of-type{
+    margin-top:60px;
+}
+.text-info h2{
+    margin-bottom:5px;
+    font-size:20px;
+    color:black;
+}
+.text-info p{
+    color:grey;
+    margin-top:5px;
+    font-size:14px;
+}
+
+.info-button {
+  background-color: darkred;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+#leftbar{
+  background-color: #f5f2ff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  color: grey;
+  width: 5%;
+  padding: 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0px;
+  height: 100%;
+}
+#leftbar img{
+    max-width:50px;
+    max-height:50px;
+    margin-right:20px;
+    margin-top:30px;
+    margin-left:-2px;
+    border-radius:50%;
+    object-fit:cover;
+    box-shadow: 0 0 0 5px white;
+}
+
+#upperbar{
+    background-color: #8B0000;
+    color:white;
+    padding:20px;
+    text-align:center;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+}
+
+.logout{
+    position: fixed;
+    bottom:10px;
+    left:15px;
+    padding:10px;
+}
+.logout button{
+    background:none;
+    outline:none;
+    border:none;
+}
+.logout button:hover{
+    background-color:white;
+    border-radius:45%;
+    box-shadow: 0 0 5px rgba(61, 3, 0, 0.5);
+    transition:0.5s;
+    transform: scale(1.2);
+}
+
+/* 登出確認視窗 */
+.modal {
+    display: none; /* 預設不顯示 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(128, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    height:170px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow:hidden;
+    z-index:9999;
+}
+
+.modal h3 {
+    color: white;
+    margin-bottom: 20px;
+    text-align:center;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top:20px;
+}
+
+.modal button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width:80px;
+    height:40px;
+}
+
+.yes-btn {
+    background-color: white;
+    color: #800000;
+}
+.yes-btn:hover {
+  background-color: white;
+  transition: 0.3s;
+  transform: scale(1.05);
+}
+
+.no-btn {
+    background-color: darkblue;
+    color: white;
+}
+.no-btn:hover {
+  background-color: lightblue;
+  transition: 0.3s;
+  transform: scale(1.05);
+}
+
+.upperpic{
+    position: relative;
+    width: 100%;
+    height:100px;
+    margin-top:50px;
+    border-radius:50%;
+    margin-left:85px;
+}
+
+.upperpic-image{
+    width:50px;
+    height:100px;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0; /* 放置在圖片底部 */
+  background: rgba(0, 0, 0, 0.1); /* 背景半透明，顯示圖片 */
+  color: black;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  border-radius: 0 0 10px 10px; /* 圓角 */
+  display:flex;
+  justify-content:space-between;
+  align-item:center;
+  padding:20px;
+}
+
+.intoClass {
+  background-color: darkred;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right:10%;
+}
+
+.info-button:hover {
+  background-color: red;
+  transition: 0.3s;
+  transform: scale(1.05);
+}
+
+.openMaterial {
+  background-color: #fff;
+  width:45%;
+  margin: 20px 120px;
+  padding: 20px;
+  border-radius: 25px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  display:flex;
+}
+.course text-info {
+    flex:1;
+}
+.text-info{
+    display: flex;
+    justify-content: space-between;
+    padding:10px;
+}
+.text-info p{
+    margin-bottom:5px;
+    font-size:20px;
+    color:black;
+    margin-right:150px;
+}
+.openM {
+  background-color: darkred;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-left:auto;
+}
+
+p strong{
+    display: block;
+}
+
+.teacherAnnoucement{
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  color: darkgrey;
+  width: 40%;
+  padding: 20px;
+  position: fixed;
+  top: 170px;
+  right: 20px;
+  height: 73%;
+  transition: right 0.3s;
+  border-radius: 10px;
+}
+
+.notice-board {
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 10px;
+    height: 300px;
+    width:100%; /* 固定宽度 */
+    max-width:600px;
+    overflow-y: auto;
+    background-color: white;
+    text-align: left;
+    clear:both;
+    color:black;
+}
+.input-area {
+    margin-bottom:20px;
+    margin-top:20px;
+}
+input[type="text"] {
+    border-radius: 5px;
+    width:100%;
+    color:black;
+}
+
+.button-group{
+    diplay:flex;
+    justify-content:space-between;
+    align-item:center;
+    margin-top:10px;
+}
+
+.uplaodNotice {
+  background-color: darkred;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right:10%;
+}
+.uplaodNotice:hover {
+  background-color: red;
+  transition: 0.3s;
+  transform: scale(1.05);
+}
+.deleteNotice {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right:10%;
+}
+.deleteNotice:hover {
+  background-color: lightblue;
+  transition: 0.3s;
+  transform: scale(1.05);
+}
+
