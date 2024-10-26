@@ -14,12 +14,19 @@
 <body>
     <!--PDF.js-->
     <script defer type="module" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.mjs"></script>
-    <script async type="module">
-        import { Peer } from "https://esm.sh/peerjs@1.5.4?bundle-deps"
+    <!--ES5-->
+    <script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+    <script defer src="https://esm.sh/peerjs@1.5.4?bundle-deps"></script>
+    <script defer src="./modules/firebaseConfig.js"></script>
+    <script defer src="./modules/peerJsConfig.js"></script>
+    <script async>
+        /*import { Peer } from "https://esm.sh/peerjs@1.5.4?bundle-deps"
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
         import { getFirestore ,  getDocs , setDoc, collection , query , where ,doc ,deleteDoc, getCountFromServer , count , updateDoc} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"
         import { firebaseConfig } from "./modules/firebaseConfig.js"
         import { peerJsConfig } from "./modules/peerJsConfig.js"
+        ES6*/
         const peer = new Peer(peerJsConfig)
         //const peerID = sessionStorage.getItem("peer.id")
         const peerOpen =  peer.on('open', function(id) {
@@ -478,19 +485,19 @@
     <div id='controls'>
         <!-- 視訊畫面中的相機開關按鈕 -->
         <div class="control-container" id='camera-btn'>
-            <img src="icon/camera.png"/>
+            <img src="./icon/camera.png"/>
         </div>
         <!-- 視訊畫面中的麥克風開關按鈕 -->
         <div class="control-container" id="mic-btn">
-            <img src="icon/mic.png"/>
+            <img src="./icon/mic.png"/>
         </div>
         <!-- 視訊畫面中的分享螢幕開關按鈕 -->
         <div class="control-container" id='screen-btn'>
-            <img src="icon/screen.png"/>
+            <img src="./icon/screen.png"/>
         </div>
         <!-- 視訊畫面中的挂電話按鈕 -->
         <div class="control-container" id='leave-btn'>
-            <img src="icon/phone.png"/>
+            <img src="./icon/phone.png"/>
         </div>
     </div>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>

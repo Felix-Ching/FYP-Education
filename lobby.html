@@ -8,11 +8,17 @@
     <link rel='stylesheet' type='text/css' media='screen' href='lobby.css'>
 </head>
 <body>
-    <script defer type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+    <!--ES5-->
+    <script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+    <script defer src="./modules/firebaseConfig.js"></script>
+    <script defer src="./modules/fs-printRoom.js"></script>
+    <script defer>
+        /*import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
         import { getFirestore ,  getDocs , collection , query , where ,doc} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"
         import {firebaseConfig} from "./modules/firebaseConfig.js"
-        import {print_Room} from "./modules/fs-printRoom.js"
+        import {print_Room} from "./modules/fs-printRoom.js"*/
+        //ES6 only
         const db = getFirestore(initializeApp(firebaseConfig));
         const oClass = sessionStorage.getItem("class") || "MedicalEnglish"
         const qR = await getDocs(query( collection(db, oClass) ) , where("Status" , "==" , false));

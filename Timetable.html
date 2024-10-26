@@ -18,7 +18,7 @@
       sessionStorage.setItem("class" , "MedicalEnglish");
     </script>
     <div id="leftbar">
-      <img src="image/profile.jpg" alt="profile">
+      <img src="./icon/user_Avatar.png" alt="profile">
        <div class="logout">
          <button type="submit" class="btn btn-default btn-sm" onclick="showModal()">
          <span class="glyphicon glyphicon-log-out"></span></button></a>
@@ -98,11 +98,16 @@
       <!--<button class="deleteNotice" onclick="clearNotices()">清空公告栏</button>-->
     </div>
   </div>
-
-<script defer type="module">
+  <!--ES5-->
+<script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+<script defer src="./modules/firebaseConfig.js"></script>
+<script defer>
+    /*ES6
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js'
     import { getDatabase , ref, set , onValue} from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js'
     import { firebaseConfig } from "./modules/firebaseConfig.js"
+    */
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
 
