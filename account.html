@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+    <script src="./modules/firebaseConfig.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+    <script>
+        function redirectURL(){
+            switch(window.location.origin){
+                case "https://localhost:5500": return "https://localhost:5500/default.html";
+                case "https://felix-ching.github.io": return "https://felix-ching.github.io/FYP-Education/default.html"
+            }
+        }
+        const RedirectURL = redirectURL();
+        firebaseConfig.apiKey = "AIzaSyD4mu_Lqmkfki-zcTKGbC-8fqdS9q-MV5A";
+        const fb = firebase.initializeApp(firebaseConfig)
+        const user = firebase.auth().currentUser;
+        if(user){
+            window.location.replace(RedirectURL);
+        }else{
+            const ui = new firebaseui.auth.AuthUI(fb.auth());
+            ui.start('#firebaseui-auth-container', {
+                callbacks: {
+                    signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                    // User successfully signed in.
+                    // Return type determines whether we continue the redirect automatically
+                    // or whether we leave that to developer to handle.
+                    return true;
+                    },
+                    uiShown: function() {
+                    // The widget is rendered.
+                    // Hide the loader.
+                    //document.getElementById('loader').style.display = 'none';
+                    }
+                },
+                // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+                signInFlow: 'popup',
+                signInSuccessUrl: RedirectURL,
+                signInOptions: [
+                    // Leave the lines as is for the providers you want to offer your users.
+                    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+                ],
+                allowSameDevice:true
+            });
+        }
+
+    </script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />
+</head>
+<body>
+    <div>LightFake Chat</div>
+    <div id="firebaseui-auth-container"></div>
+</body>
+</html>
