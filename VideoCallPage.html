@@ -13,27 +13,156 @@
 </head>
 <body>
     <!--PDF.js-->
-    <script defer type="module" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.mjs"></script>
+    <!--<script type="mdoule" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.mjs"></script>-->
     <!--ES5-->
-    <script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
-    <script defer src="https://esm.sh/peerjs@1.5.4?bundle-deps"></script>
-    <script defer src="./modules/firebaseConfig.js"></script>
-    <script defer src="./modules/peerJsConfig.js"></script>
-    <script async>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <!--<script defer src="https://esm.sh/peerjs@1.5.4?bundle-deps"></script>-->
+    <script src="./modules/firebaseConfig.js"></script>
+    <script src="./modules/peerJsConfig.js"></script>
+
+    <!--PDF-->
+    <style>
+        #PDF-Block{
+            left:0;
+            position: fixed;
+            z-index:3
+        }
+        #the-canvas {
+            border: 1px solid black;
+            direction: ltr;
+            z-index:3;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width:40%;
+            height:60%;
+        }
+        #pdf-ctl{
+            position:fixed;
+            top: 60%;
+            left:15%;
+            z-index:4;
+        }
+        #prev{
+            position: fixed;
+            top: 60%;
+            left:10%;
+            z-index:4;
+        }
+        #next{
+            position: fixed;
+            top: 60%;
+            left:25%;
+            z-index:4;
+        }
+    </style>
+    <div id="PDF-Block">
+        <canvas id="the-canvas" overflow="auto"></canvas>
+        <div id="pdf-ctl">
+            <button id="prev">Previous</button>
+            &nbsp; &nbsp;
+            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+            <button id="next">Next</button>
+        </div>
+        <!-- Create a button to submit the input -->
+        <button id="submit-btn">send</button>
+    </div>
+    <div id="text" overflow="auto" flex=1>
+        <!-- Create a text input field -->
+        <input type="text" id="input" placeholder="Enter your note here">
+    </div>
+    <script>
+
+    </script>
+    <style>
+        #text{
+            position:relative
+        }
+        #input{
+            position: fixed;
+            bottom:0;
+            left:0%;
+            z-index:0;
+            width: 40%;
+            height: 35%;
+            box-sizing: border-box;
+        }
+        #submit-btn{
+            position: fixed;
+            top: 60%;
+            left:35%;
+            z-index:4;
+        }
+        #question{
+            position: fixed;
+            bottom: 25%;
+            left: 0;
+            width: 40%;
+            height:10%;
+            box-sizing: border-box;
+            display: block;
+            border: 1px solid black;
+        }
+    </style>
+    <style>
+        #user-1{
+            /*opacity: 1;*/
+            z-index:1;
+            position: fixed;
+            right: 0;
+            width:60%;
+        }
+        #user-2{
+            /*opacity: 0;*/
+            z-index:0;
+            position: fixed;
+            right: 0;
+            width:60%;
+        }
+    </style>
+    <div id="videos" >
+        <video class="video-player" id="user-1" autoplay playsinline muted></video>
+        <video class="video-player" id="user-2" autoplay playsinline></video>
+        <div id="screen-share-container"></div> <!-- 新增的容器用於顯示屏幕分享 -->
+    </div>
+
+    <div id='controls'>
+        <!-- 視訊畫面中的相機開關按鈕 -->
+        <div class="control-container" id='camera-btn'>
+            <img src="./icon/camera.png"/>
+        </div>
+        <!-- 視訊畫面中的麥克風開關按鈕 -->
+        <div class="control-container" id="mic-btn">
+            <img src="./icon/mic.png"/>
+        </div>
+        <!-- 視訊畫面中的分享螢幕開關按鈕 -->
+        <div class="control-container" id='screen-btn'>
+            <img src="./icon/screen.png"/>
+        </div>
+        <!-- 視訊畫面中的挂電話按鈕 -->
+        <div class="control-container" id='leave-btn'>
+            <img src="./icon/phone.png"/>
+        </div>
+    </div>
+    <script defer>
         /*import { Peer } from "https://esm.sh/peerjs@1.5.4?bundle-deps"
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
         import { getFirestore ,  getDocs , setDoc, collection , query , where ,doc ,deleteDoc, getCountFromServer , count , updateDoc} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"
         import { firebaseConfig } from "./modules/firebaseConfig.js"
         import { peerJsConfig } from "./modules/peerJsConfig.js"
         ES6*/
-        const peer = new Peer(peerJsConfig)
+        const peer = new window.Peer(window.peerJsConfig)
         //const peerID = sessionStorage.getItem("peer.id")
         const peerOpen =  peer.on('open', function(id) {
             console.log('My peer ID is: ' + id);
         });
-    
-        const db = getFirestore(initializeApp(firebaseConfig));
+        
+        //const db = getFirestore(initializeApp(firebaseConfig));
+        const db = firebase.firestore(firebase.initializeApp(firebaseConfig));
         const oClass = sessionStorage.getItem("class") || "MedicalEnglish";
         console.log(oClass)
 
@@ -59,7 +188,7 @@
         async function peerIn(){
             if(user1.srcObject == null) return
             console.log("peerIn" , peer.id)
-            let dbSize = await getCountFromServer(query( collection(db, oClass)  , where("Status" , "==" , false)))
+            /*let dbSize = await getCountFromServer(query( collection(db, oClass)  , where("Status" , "==" , false)))
             .then((temp)=>{return temp.data().count });
             console.log("Available Room:" , dbSize)
             let selfRoom = doc(db , oClass , "ROOM"+dbSize)
@@ -68,7 +197,8 @@
                 ID: peer.id ,
                 Organizer: "Testing" ,
                 Status: false
-            });
+            });*/
+            
             peer.on('call', async function(call) {
                 console.log("call recv")
                 call.answer(user1.srcObject); // Answer the call with an A/V stream.
@@ -219,11 +349,12 @@
         // header on that server.
         
         // Loaded via <script> tag, create shortcut to access PDF.js exports.
-        let { pdfjsLib } = globalThis;
+        //let { pdfjsLib } = globalThis;
         
         // The workerSrc property shall be specified.
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.mjs';
-        
+        //pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.mjs';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.js';
+
         let pdfDoc = null,
             pageNum = 1,
             pageRendering = false,
@@ -335,172 +466,12 @@
             console.log("Reload")
         })
     </script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.mjs.map" type="application/json"></script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.mjs.map" type="application/json"></script>
-    
-    <!--PDF-->
-    <style>
-        #PDF-Block{
-            left:0;
-            position: fixed;
-            z-index:3
-        }
-        #the-canvas {
-            border: 1px solid black;
-            direction: ltr;
-            z-index:3;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width:40%;
-            height:60%;
-        }
-        #pdf-ctl{
-            position:fixed;
-            top: 60%;
-            left:15%;
-            z-index:4;
-        }
-        #prev{
-            position: fixed;
-            top: 60%;
-            left:10%;
-            z-index:4;
-        }
-        #next{
-            position: fixed;
-            top: 60%;
-            left:25%;
-            z-index:4;
-        }
-    </style>
-    <div id="PDF-Block">
-        <canvas id="the-canvas" overflow="auto"></canvas>
-        <div id="pdf-ctl">
-            <button id="prev">Previous</button>
-            &nbsp; &nbsp;
-            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-            <button id="next">Next</button>
-        </div>
-        <!-- Create a button to submit the input -->
-        <button id="submit-btn">send</button>
-    </div>
-    <div id="text" overflow="auto" flex=1>
-        <!-- Create a text input field -->
-        <input type="text" id="input" placeholder="Enter your note here">
-    </div>
-    <script>
+    <!--<script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.mjs.map" type="application/json"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.mjs.map" type="application/json"></script>-->
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.js.map" type="application/json"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.js.map" type="application/json"></script>
 
-    </script>
-    <style>
-        #text{
-            position:relative
-        }
-        #input{
-            position: fixed;
-            bottom:0;
-            left:0%;
-            z-index:0;
-            width: 40%;
-            height: 35%;
-            box-sizing: border-box;
-        }
-        #submit-btn{
-            position: fixed;
-            top: 60%;
-            left:35%;
-            z-index:4;
-        }
-        #question{
-            position: fixed;
-            bottom: 25%;
-            left: 0;
-            width: 40%;
-            height:10%;
-            box-sizing: border-box;
-            display: block;
-            border: 1px solid black;
-        }
-    </style>
-    <!--<div>
-      <button id="prev">Previous</button>
-      <button id="next">Next</button>
-      &nbsp; &nbsp;
-      <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-    </div>-->    
-    <!--<div id="textBlock">
-        <pre id="text"></pre>
-        <script defer>
-            const synth = window.speechSynthesis;
-            if( synth.getVoices().length > 0) {
-                // Voices are available
-                console.log('Voices are available:');
-                console.log(synth.getVoices());
-            } else {
-                console.log('No voices available.');
-            }
-            
-            textFrame = document.getElementById("text")
-            
-            fetch( (sessionStorage.getItem("Class")||"MedicalEnglish")+".txt")
-                .then(response => response.text())
-                .then(data => {
-                    textFrame.textContent = data;
-                })
-                .catch(error => {
-                    console.error('Error loading the text file:', error);
-                });
-
-            textFrame.addEventListener("mouseup" , function(){
-                console.log("Selected text")
-                let selectedT = window.getSelection().toString();
-                let utterance = new SpeechSynthesisUtterance(selectedT);
-                utterance.voice = window.speechSynthesis.getVoices().find(voice => voice.name === 'English (Great Britain)+Robosoft2')
-                synth.speak(utterance)
-            })
-        </script>
-    </div>-->
-    <style>
-        #user-1{
-            /*opacity: 1;*/
-            z-index:1;
-            position: fixed;
-            right: 0;
-            width:60%;
-        }
-        #user-2{
-            /*opacity: 0;*/
-            z-index:0;
-            position: fixed;
-            right: 0;
-            width:60%;
-        }
-    </style>
-    <div id="videos" >
-        <video class="video-player" id="user-1" autoplay playsinline muted></video>
-        <video class="video-player" id="user-2" autoplay playsinline></video>
-        <div id="screen-share-container"></div> <!-- 新增的容器用於顯示屏幕分享 -->
-    </div>
-
-    <div id='controls'>
-        <!-- 視訊畫面中的相機開關按鈕 -->
-        <div class="control-container" id='camera-btn'>
-            <img src="./icon/camera.png"/>
-        </div>
-        <!-- 視訊畫面中的麥克風開關按鈕 -->
-        <div class="control-container" id="mic-btn">
-            <img src="./icon/mic.png"/>
-        </div>
-        <!-- 視訊畫面中的分享螢幕開關按鈕 -->
-        <div class="control-container" id='screen-btn'>
-            <img src="./icon/screen.png"/>
-        </div>
-        <!-- 視訊畫面中的挂電話按鈕 -->
-        <div class="control-container" id='leave-btn'>
-            <img src="./icon/phone.png"/>
-        </div>
-    </div>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script>
         //saveAs(blob, "hello world.txt");
         //deny student to control pdf page

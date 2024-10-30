@@ -15,12 +15,12 @@
 <body>
   <script> 
     if(sessionStorage.getItem("Type") == null){
-      sessionStorage.getItem("Type" , "Student")
+      sessionStorage.setItem("Type" , "Student")
     }
   </script>
   <header>
     <div id="leftbar">
-      <img src="image/profile.jpg" alt="profile">
+      <img src="icon/profile.jpg" alt="profile">
        <div class="logout">
          <a href="login.html">
          <button type="submit" class="btn btn-default btn-sm">
@@ -32,7 +32,7 @@
 
   <h1><strong>課程</strong></h1>
   <div class="course">
-    <img src="image/1.jpg" alt="課程一">
+    <img src="./icon/1.jpg" alt="課程一">
     <div class="text-info">
       <h2><strong>瞭解你自己的英語程度</strong></h2>
       <p>Learn the Basics</p>
@@ -41,7 +41,7 @@
   </div>
 
   <div class="course">
-    <img src="image/2.jpg" alt="課程二">
+    <img src="./icon/2.jpg" alt="課程二">
     <div class="text-info">
       <h2><strong>醫療用語教學</strong></h2>
       <p>教你如何描述自身的病症</p>
@@ -50,7 +50,7 @@
   </div>
 
   <div class="course">
-    <img src="image/3.jpg" alt="課程三">
+    <img src="./icon/3.jpg" alt="課程三">
     <div class="text-info">
       <h2><strong>商業英文</strong></h2>
       <p>教導你在面試或工作時的英文用語</p>
@@ -59,7 +59,7 @@
   </div>
 
   <div id="sidebar" class="hidden">
-    <img src="image/books.jpg" alt="english level">
+    <img src="./icon/books.jpg" alt="english level">
     <div class="class-info">
       <h2 id="course-info"></h2>
       <button id="teacher-info" class="teacher">
@@ -91,17 +91,17 @@
     var courseData = {
       "Course 1": {
         teacherName: "陳老師",
-        teacherImage: "image/victor.png",
+        teacherImage: "icon/victor.png",
         Course: "瞭解你自己的英語程度"
       },
       "Course 2": {
         teacherName: "蔡老師",
-        teacherImage: "image/victor.png",
+        teacherImage: "icon/victor.png",
         Course: "醫療用語教學"
       },
       "Course 3": {
         teacherName: "林老師",
-        teacherImage: "image/victor.png",
+        teacherImage: "icon/victor.png",
         Course: "商業英文"
       }
     };

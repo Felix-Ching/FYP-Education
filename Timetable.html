@@ -99,26 +99,28 @@
     </div>
   </div>
   <!--ES5-->
-<script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
-<script defer src="./modules/firebaseConfig.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+<script src="./modules/firebaseConfig.js"></script>
 <script defer>
     /*ES6
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js'
     import { getDatabase , ref, set , onValue} from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js'
     import { firebaseConfig } from "./modules/firebaseConfig.js"
     */
+    //const firebase = window.firebase;
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
 
     // Initialize Realtime Database and get a reference to the service
-    const database = getDatabase(app);
+    const database = firebase.database(app);
 
     let addNotice = function(){
       console.log("addNotice")
       let input = document.getElementById("userInput").value;
       console.log('Announcement/' + sessionStorage.getItem("class") + '/' + Date.now())
-      set(ref(database,'Announcement/' + sessionStorage.getItem("class") + '/' + Date.now()),{
+      database.ref('Announcement/' + sessionStorage.getItem("class") + '/' + Date.now()).set({
+      //set(ref(database,'Announcement/' + sessionStorage.getItem("class") + '/' + Date.now()),{
         context:input
       })
       console.log("done")
@@ -126,7 +128,8 @@
     document.getElementById("uploadNotice").addEventListener("click" , addNotice)
 
     const noticeBoard = document.getElementById("noticeBoard");
-    onValue(ref(database, 'Announcement/' + sessionStorage.getItem("class") ), (snapshot) => {
+    database.ref('Announcement/' + sessionStorage.getItem("class")).on('value' , (snapshot) => {
+    //onValue(ref(database, 'Announcement/' + sessionStorage.getItem("class") ), (snapshot) => {
       console.log(snapshot);
       noticeBoard.innerHTML="";
       snapshot.forEach((data)=>{
@@ -135,41 +138,13 @@
         block.textContent = data.val().context;
         noticeBoard.appendChild(block)
       })
-    },{
-      onlyOnce:false
-    })
+    });
 
     if(sessionStorage.getItem('type')!=="Teacher"){
       addNotice = null;
       document.getElementById("input-area").remove();
       document.getElementById("button-group").remove();
     }
-    /*function addNotice() {
-        var input = document.getElementById("userInput").value;
-        if (input.trim() === "") {
-            alert("请输入公告内容！");
-            return;
-        }
-
-        var noticeBoard = document.getElementById("noticeBoard");
-        var newNotice = document.createElement("p");
-        newNotice.textContent = input;
-        noticeBoard.appendChild(newNotice);
-
-        // 清空输入框
-        document.getElementById("userInput").value = "";
-    }
-
-    function clearNotices() {
-        var noticeBoard = document.getElementById("noticeBoard");
-        if (noticeBoard.innerHTML.trim() === "") {
-            alert("公告栏已经是空的了！");
-            return;
-        }
-        if (confirm("确定要清空所有公告吗？")) {
-            noticeBoard.innerHTML = "";
-        }
-    }*/
 </script>
 
 </body>

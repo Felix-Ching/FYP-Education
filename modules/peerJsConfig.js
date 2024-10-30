@@ -1,4 +1,4 @@
-export const peerJsConfig ={
+const peerJsConfig ={
     host: "0.peerjs.com",
     port: 443,
     path: "/",
