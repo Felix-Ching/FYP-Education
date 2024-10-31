@@ -25,41 +25,6 @@
     <script src="./modules/peerJsConfig.js"></script>
 
     <!--PDF-->
-    <style>
-        #PDF-Block{
-            left:0;
-            position: fixed;
-            z-index:3
-        }
-        #the-canvas {
-            border: 1px solid black;
-            direction: ltr;
-            z-index:3;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width:40%;
-            height:60%;
-        }
-        #pdf-ctl{
-            position:fixed;
-            top: 60%;
-            left:15%;
-            z-index:4;
-        }
-        #prev{
-            position: fixed;
-            top: 60%;
-            left:10%;
-            z-index:4;
-        }
-        #next{
-            position: fixed;
-            top: 60%;
-            left:25%;
-            z-index:4;
-        }
-    </style>
     <div id="PDF-Block">
         <canvas id="the-canvas" overflow="auto"></canvas>
         <div id="pdf-ctl">
@@ -73,57 +38,11 @@
     </div>
     <div id="text" overflow="auto" flex=1>
         <!-- Create a text input field -->
-        <input type="text" id="input" placeholder="Enter your note here">
+        <textarea id="input" placeholder="Enter your note here"></textarea>
     </div>
     <script>
 
     </script>
-    <style>
-        #text{
-            position:relative
-        }
-        #input{
-            position: fixed;
-            bottom:0;
-            left:0%;
-            z-index:0;
-            width: 40%;
-            height: 35%;
-            box-sizing: border-box;
-        }
-        #submit-btn{
-            position: fixed;
-            top: 60%;
-            left:35%;
-            z-index:4;
-        }
-        #question{
-            position: fixed;
-            bottom: 25%;
-            left: 0;
-            width: 40%;
-            height:10%;
-            box-sizing: border-box;
-            display: block;
-            border: 1px solid black;
-        }
-    </style>
-    <style>
-        #user-1{
-            /*opacity: 1;*/
-            z-index:1;
-            position: fixed;
-            right: 0;
-            width:60%;
-        }
-        #user-2{
-            /*opacity: 0;*/
-            z-index:0;
-            position: fixed;
-            right: 0;
-            width:60%;
-        }
-    </style>
     <div id="videos" >
         <video class="video-player" id="user-1" autoplay playsinline muted></video>
         <video class="video-player" id="user-2" autoplay playsinline></video>
