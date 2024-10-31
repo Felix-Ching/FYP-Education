@@ -9,6 +9,8 @@ h1{
     color:grey;
     margin: 20px 120px;
 }
+
+
 .course {
   background-color: #fff;
   width:35%;
@@ -27,6 +29,9 @@ h1{
 }
 .course text-info {
     flex:1;
+}
+.course:first-of-type{
+    margin-top:60px;
 }
 .text-info h2{
     margin-bottom:5px;
@@ -63,11 +68,25 @@ h1{
     max-width:50px;
     max-height:50px;
     margin-right:20px;
+    margin-top:30px;
     margin-left:-2px;
     border-radius:50%;
     object-fit:cover;
     box-shadow: 0 0 0 5px white;
 }
+
+#upperbar{
+    background-color: #8B0000;
+    color:white;
+    padding:20px;
+    text-align:center;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+}
+
 .logout{
     position: fixed;
     bottom:10px;
@@ -86,6 +105,64 @@ h1{
     transition:0.5s;
     transform: scale(1.2);
 }
+/* 登出確認視窗 */
+.modal {
+    display: none; /* 預設不顯示 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(128, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    height:170px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow:hidden;
+    z-index:9999;
+}
+
+.modal h3 {
+    color: white;
+    margin-bottom: 20px;
+    text-align:center;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top:20px;
+}
+
+.modal button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width:80px;
+    height:40px;
+}
+
+.yes-btn {
+    background-color: white;
+    color: #800000;
+}
+.yes-btn:hover {
+  background-color: white;
+  transition: 0.3s;
+  transform: scale(1.05);
+}
+
+.no-btn {
+    background-color: darkblue;
+    color: white;
+}
+.no-btn:hover {
+  background-color: lightblue;
+  transition: 0.3s;
+  transform: scale(1.05);
+}
 #sidebar {
   background-color: white;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
@@ -93,7 +170,7 @@ h1{
   width: 40%;
   padding: 20px;
   position: fixed;
-  top: 0;
+  top: 70px;
   right: 0px;
   height: 100%;
   transition: right 0.3s;
@@ -103,13 +180,13 @@ h1{
 }
 #sidebar img{
     max-width:100%;
-    height:auto;
+    height:40%;
     margin-right:20px;
     margin-left:0px;
     border-radius:10px;
 }
 
-#open-course-button {
+.open-course-button {
   position: fixed;
   bottom:10px;
   right:35px;
@@ -123,11 +200,16 @@ h1{
   margin-top: 20px;
   width:35%;
 }
-#open-course-button:hover{
+.open-course-button:hover{
     background-color:red;
     transition:0.5s;
     transform: scale(1.02);
 }
+
+.second-button{
+    bottom:60px;
+}
+
 #course-info{
     font-weight: bold;
 }
