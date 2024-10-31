@@ -37,18 +37,29 @@
     z-index: 4;
 }
 
-#prev {
+#prev, #next {
     position: fixed;
     top: 60%;
-    left: 10%;
     z-index: 4;
+    padding: 10px 20px;
+    background-color: #007bff; /* 改變為更現代的藍色 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 添加過渡效果 */
+}
+
+#prev {
+    left: 5%;
 }
 
 #next {
-    position: fixed;
-    top: 60%;
     left: 25%;
-    z-index: 4;
+}
+
+#prev:hover, #next:hover {
+    background-color: #0056b3; /* 懸停時變暗以顯示交互 */
 }
 
 #text {
@@ -58,18 +69,37 @@
 #input {
     position: fixed;
     bottom: 0;
-    left: 0%;
+    left: 0;
     z-index: 0;
-    width: 40%;
-    height: 35%;
+    width: 65%;
+    padding: 10px;
+    margin-right: 10px;
     box-sizing: border-box;
+    border: 1px solid #ccc; /* 添加輕微的邊框以區分輸入區域 */
+    border-radius: 5px;
+    font-size: 16px; /* 增大字體使其更易讀 */
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 添加內部陰影以增加深度 */
+    resize: none; /* 禁止調整輸入框大小 */
+    overflow-wrap: break-word; /* 超出邊界時自動換行 */
+    height: 35%; /* 自動調整高度 */
 }
 
 #submit-btn {
     position: fixed;
-    top: 60%;
-    left: 33.5%;
-    z-index: 4;
+    left: 35.5%;
+    bottom: 243.5px;
+    padding: 10px 20px;
+    background-color: #007bff; /* 改變為更現代的藍色 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 添加過渡效果 */
+}
+
+#submit-btn:hover {
+    background-color: #0056b3; /* 懸停時變暗以顯示交互 */
 }
 
 #question {
@@ -97,16 +127,13 @@
     position: fixed;
     right: 0;
     width: 60%;
+    display: block; /* 修正 display: true 錯誤 */
 }
 
 .video-player {
     background-color: black;
     width: 100%;
     height: 100%;
-}
-
-#user-2 {
-    display: block; /* 修正 display: true 錯誤 */
 }
 
 .smallFrame {
@@ -151,8 +178,6 @@
     background-color: red;
 }
 
-/* 新增的樣式 */
-
 #user-2.fullscreen {
     position: fixed;
     top: 0;
@@ -170,40 +195,4 @@
     height: 300px; /* 容器高度 */
     z-index: 1; /* 確保屏幕分享在視訊畫面上方顯示 */
     overflow: hidden; /* 隱藏溢出部分 */
-}
-
-#input {
-    width: 65%; 
-    padding: 10px;
-    margin-right: 10px;
-    box-sizing: border-box;
-    border: 1px solid #ccc; /* 添加輕微的邊框以區分輸入區域 */
-    border-radius: 5px;
-    font-size: 16px; 
-    background-color: #f9f9f9;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); 
-    resize: none; 
-    overflow-wrap: break-word; 
-    height: 35.5%; 
-}
-
-#submit-btn {
-    position: absolute;
-    left: 515px;
-    top: 438px;
-    padding: 10px 20px;
-    background-color: #007bff; /* 改變為更現代的藍色 */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* 添加過渡效果 */
-}
-
-#submit-btn:hover {
-    background-color: #0056b3; /* 懸停時變暗以顯示交互 */
-}
-
-#submit-btn:hover {
-    background-color: #0056b3; /* 懸停時變暗以顯示交互 */
 }
