@@ -6,22 +6,110 @@
 
 #videos{
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 2fr 3fr; /* 左側PDF 2份寬度，右側視頻 3份寬度 */
     height: 100vh;
     overflow: hidden;
 }
 
-.video-player{
+#PDF-Block {
+    left: 0;
+    position: fixed;
+    z-index: 3;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#the-canvas {
+    border: 1px solid black;
+    direction: ltr;
+    z-index: 3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 60%;
+}
+
+#pdf-ctl {
+    position: fixed;
+    top: 60%;
+    left: 15%;
+    z-index: 4;
+}
+
+#prev {
+    position: fixed;
+    top: 60%;
+    left: 10%;
+    z-index: 4;
+}
+
+#next {
+    position: fixed;
+    top: 60%;
+    left: 25%;
+    z-index: 4;
+}
+
+#text {
+    position: relative;
+}
+
+#input {
+    position: fixed;
+    bottom: 0;
+    left: 0%;
+    z-index: 0;
+    width: 40%;
+    height: 35%;
+    box-sizing: border-box;
+}
+
+#submit-btn {
+    position: fixed;
+    top: 60%;
+    left: 33.5%;
+    z-index: 4;
+}
+
+#question {
+    position: fixed;
+    bottom: 25%;
+    left: 0;
+    width: 40%;
+    height: 10%;
+    box-sizing: border-box;
+    display: block;
+    border: 1px solid black;
+}
+
+#user-1 {
+    /*opacity: 1;*/
+    z-index: 1;
+    position: fixed;
+    right: 0;
+    width: 60%;
+}
+
+#user-2 {
+    /*opacity: 0;*/
+    z-index: 0;
+    position: fixed;
+    right: 0;
+    width: 60%;
+}
+
+.video-player {
     background-color: black;
     width: 100%;
     height: 100%;
 }
 
-#user-2{
-    display: true;
+#user-2 {
+    display: block; /* 修正 display: true 錯誤 */
 }
 
-.smallFrame{
+.smallFrame {
     position: fixed;
     top: 20px;
     left: 20px;
@@ -34,17 +122,17 @@
     z-index: 999;
 }
 
-#controls{
+#controls {
     position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 30px; /* 稍微抬高一些，給用戶輸入的文本框留空間 */
+    right: 8%;
+    transform: translateX(-50%); /* 居中對齊 */
     display: flex;
-    gap: 1em;
-    z-index: 9999
+    gap: 1.5em; /* 增加按鈕間距 */
+    z-index: 9999;
 }
 
-.control-container{
+.control-container {
     background-color: blue;
     padding: 20px;
     border-radius: 50%;
@@ -54,12 +142,12 @@
     cursor: pointer;
 }
 
-.control-container img{
+.control-container img {
     height: 30px;
     width: 30px;
 }
 
-#leave-btn{
+#leave-btn {
     background-color: red;
 }
 
@@ -73,6 +161,7 @@
     height: 100%;
     z-index: 9999;
 }
+
 #screen-share-container {
     position: absolute;
     top: 50px; /* 距離頂部的距離 */
@@ -81,4 +170,40 @@
     height: 300px; /* 容器高度 */
     z-index: 1; /* 確保屏幕分享在視訊畫面上方顯示 */
     overflow: hidden; /* 隱藏溢出部分 */
+}
+
+#input {
+    width: 65%; 
+    padding: 10px;
+    margin-right: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc; /* 添加輕微的邊框以區分輸入區域 */
+    border-radius: 5px;
+    font-size: 16px; 
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); 
+    resize: none; 
+    overflow-wrap: break-word; 
+    height: 35.5%; 
+}
+
+#submit-btn {
+    position: absolute;
+    left: 510px;
+    top: 415px;
+    padding: 10px 20px;
+    background-color: #007bff; /* 改變為更現代的藍色 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 添加過渡效果 */
+}
+
+#submit-btn:hover {
+    background-color: #0056b3; /* 懸停時變暗以顯示交互 */
+}
+
+#submit-btn:hover {
+    background-color: #0056b3; /* 懸停時變暗以顯示交互 */
 }
