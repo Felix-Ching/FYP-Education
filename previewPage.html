@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Preview</title>
     <link rel="stylesheet" href="previewPage.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
     <div class="main-container">
@@ -13,37 +14,40 @@
             <button class="avatar-btn">
                 <img src="./icon/user_Avatar.png" alt="Avatar" class="avatar">
             </button>
-            <button class="logout-btn">登出</button>
+            <div class="logout" class="logout">
+                <button><span class="glyphicon glyphicon-log-out"></span></button>
+            </div>
         </div>
 
         <!-- Main Content Section -->
-        <div class="content">
-            <!-- Header Section -->
-            <div class="header">
-                <div class="class-details">
-                    <h1>鑑定您的英文水平</h1>
-                    <p>上課時間：09/24 10:00a.m. - 12:00p.m. (課程教材)</p>
-                </div>
-                <div class="header-buttons">
-                    <button class="header-btn">進入房間</button>
-                    <button class="header-btn">聯絡老師</button>
-                </div>
-            </div>
+        <div class="header"></div>
 
-            <!-- Text Preview Section -->
-            <div class="text-preview" id="text-preview">
-                <div class="reminder">
-                    提醒：選取不聯解的詞后將會播放該詞正確發音
-                </div>
-                <iframe id="viewer"></iframe>
-                <div class="scroll-box" id="scroll-box">
-                </div>
+        <!-- Header Section -->
+        <div class="header-box">
+            <div class="class-details">
+                <h1>鑑定您的英文水平</h1>
+                <p>上課時間：09/24 10:00a.m. - 12:00p.m. (課程教材)</p>
             </div>
-            <script async>
-                const viewer = document.getElementById("viewer")
-                viewer.src = "./pdfjs/web/viewer.html#page-fit?file=./Document/MySQL.pdf"//sessionStorage.getItem("class") || "MedicalEnglish";
-            </script>
+            <div class="header-buttons">
+                <button class="header-btn">進入房間</button>
+                <button class="header-btn">聯絡老師</button>
+            </div>
         </div>
+
+        <!-- PPT Preview Section 講義預覽區-->
+        <div class="text-preview" id="text-preview" style="width: 90%; margin-left: auto; margin-right: auto; margin-top: auto;">
+            <div class="reminder">
+                提醒：選取不聯解的詞后將會播放該詞正確發音
+            </div>
+            <iframe id="viewer" style="width: 95%; height: 60vh; border: none;"></iframe>
+            <div class="scroll-box" id="scroll-box">
+            </div>
+        </div>
+        <script async>
+            const viewer = document.getElementById("viewer")
+            viewer.src = "./pdfjs/web/viewer.html#page-fit?file=./Document/MySQL.pdf"//sessionStorage.getItem("class") || "MedicalEnglish";
+        </script>
+        
     </div>
 </body>
 </html>
