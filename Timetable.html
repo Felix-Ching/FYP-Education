@@ -3,20 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
   <link rel="stylesheet" type="text/css" href="style5.css">
   <title>Class Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
 
 <body>
   <header>
-    <script>
-      sessionStorage.setItem("class" , "MedicalEnglish");
-    </script>
     <div id="leftbar">
       <img src="./icon/user_Avatar.png" alt="profile">
        <div class="logout">
@@ -95,12 +91,12 @@
     </div>
     <div class="button-group" id="button-group">
       <button class="uplaodNotice" id="uploadNotice">提交公告</button>
-      <!--<button class="deleteNotice" onclick="clearNotices()">清空公告栏</button>-->
     </div>
   </div>
   <!--ES5-->
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
 <script src="./modules/firebaseConfig.js"></script>
 <script defer>
     /*ES6
@@ -108,43 +104,56 @@
     import { getDatabase , ref, set , onValue} from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js'
     import { firebaseConfig } from "./modules/firebaseConfig.js"
     */
-    //const firebase = window.firebase;
     // Initialize Firebase
+    if(!sessionStorage.getItem("Class")){
+      console.log("You haven't select class")
+      history.back()
+    }
+
     const app = firebase.initializeApp(firebaseConfig);
 
     // Initialize Realtime Database and get a reference to the service
     const database = firebase.database(app);
 
+    const aPath = '/' + sessionStorage.getItem("Class") + '/Announcement/' //aPath = AnnouncementPath
+
     let addNotice = function(){
       console.log("addNotice")
       let input = document.getElementById("userInput").value;
-      console.log('Announcement/' + sessionStorage.getItem("class") + '/' + Date.now())
-      database.ref('Announcement/' + sessionStorage.getItem("class") + '/' + Date.now()).set({
+      console.log(aPath + '/' + Date.now())
+      database.ref(aPath + '/' + Date.now()).set({
       //set(ref(database,'Announcement/' + sessionStorage.getItem("class") + '/' + Date.now()),{
         context:input
       })
       console.log("done")
     }
-    document.getElementById("uploadNotice").addEventListener("click" , addNotice)
 
     const noticeBoard = document.getElementById("noticeBoard");
-    database.ref('Announcement/' + sessionStorage.getItem("class")).on('value' , (snapshot) => {
-    //onValue(ref(database, 'Announcement/' + sessionStorage.getItem("class") ), (snapshot) => {
-      console.log(snapshot);
-      noticeBoard.innerHTML="";
-      snapshot.forEach((data)=>{
-        console.log(data.val().context)
-        const block = document.createElement("div");
-        block.textContent = data.val().context;
-        noticeBoard.appendChild(block)
-      })
+    app.auth().onAuthStateChanged(() => {
+      database.ref(sessionStorage.getItem("Class") + '/test').set({test:Math.random()}).then(async() => {
+        console.log('User is Teacher, has write permission');
+      }).catch((error) => {
+        console.log("User is Student, no write permission")
+        addNotice = null;
+        document.getElementById("input-area").remove();
+        document.getElementById("button-group").remove();
+      });
     });
 
-    if(sessionStorage.getItem('type')!=="Teacher"){
-      addNotice = null;
-      document.getElementById("input-area").remove();
-      document.getElementById("button-group").remove();
-    }
+    document.getElementById("uploadNotice").addEventListener("click" , addNotice)
+    database.ref(aPath).on('value' , (snapshot) => {
+      //onValue(ref(database, aPath ), (snapshot) => {
+        //console.log(snapshot);
+        noticeBoard.innerHTML="";
+        snapshot.forEach((data)=>{
+          if(data.val() != "test"){
+            console.log(data.val().context)
+            const block = document.createElement("div");
+            block.textContent = data.val().context;
+            noticeBoard.appendChild(block)
+          }
+        })
+      });
 </script>
 
 </body>
