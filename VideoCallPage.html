@@ -19,7 +19,9 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
     <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
     <!--<script defer src="https://esm.sh/peerjs@1.5.4?bundle-deps"></script>-->
     <script src="./modules/firebaseConfig.js"></script>
     <script src="./modules/peerJsConfig.js"></script>
@@ -81,8 +83,14 @@
         });
         
         //const db = getFirestore(initializeApp(firebaseConfig));
-        const db = firebase.firestore(firebase.initializeApp(firebaseConfig));
-        const oClass = sessionStorage.getItem("class") || "MedicalEnglish";
+        //const db = firebase.firestore(firebase.initializeApp(firebaseConfig));
+        const fb = firebase.initializeApp(firebaseConfig)
+        // Initialize Realtime Database and get a reference to the service
+        const database = firebase.database(fb);
+
+        //sessionStorage.Class = "MedicalEnglish"
+        const oClass = sessionStorage.Class || "MedicalEnglish";
+        const databaseRef = database.ref(oClass + '/ROOM')
         console.log(oClass)
 
         let user1 = document.getElementById('user-1');
@@ -104,90 +112,108 @@
 
         let remotePeer = null;
 
-        async function peerIn(){
-            if(user1.srcObject == null) return
-            console.log("peerIn" , peer.id)
-            /*let dbSize = await getCountFromServer(query( collection(db, oClass)  , where("Status" , "==" , false)))
-            .then((temp)=>{return temp.data().count });
-            console.log("Available Room:" , dbSize)
-            let selfRoom = doc(db , oClass , "ROOM"+dbSize)
-            window.selfRoom = selfRoom;
-            await setDoc(selfRoom , {
-                ID: peer.id ,
-                Organizer: "Testing" ,
-                Status: false
-            });*/
-            
-            peer.on('call', async function(call) {
-                console.log("call recv")
-                call.answer(user1.srcObject); // Answer the call with an A/V stream.
-                updateDoc(selfRoom , { Status: true})
-                remotePeer = call.peer;
-                Conn = peer.connect(remotePeer , {
-                        timeout: 5000 // 10 seconds
+        let peerIn = async function(){
+            fb.auth().onAuthStateChanged(() => {
+                if(user1.srcObject == null) return
+                console.log("peerIn" , peer.id)
+                //firestore
+                /*let dbSize = await getCountFromServer(query( collection(db, oClass)  , where("Status" , "==" , false)))
+                .then((temp)=>{return temp.data().count });
+                console.log("Available Room:" , dbSize)
+                let selfRoom = doc(db , oClass , "ROOM"+dbSize)
+                window.selfRoom = selfRoom;
+                await setDoc(selfRoom , {
+                    ID: peer.id ,
+                    Organizer: "Testing" ,
+                    Status: false
+                });*/
+                databaseRef.set({id:peer.id , status:false})
+                peer.on('call', async function(call) {
+                    console.log("call recv")
+                    call.answer(user1.srcObject); // Answer the call with an A/V stream.
+                    //updateDoc(selfRoom , { Status: true})
+                    databaseRef.update({status:true})
+                    remotePeer = call.peer;
+                    Conn = peer.connect(remotePeer , {
+                            timeout: 5000 // 10 seconds
+                        });
+                    Conn.on("open",()=>{
+                        console.log("connected:" , Conn);
+                    })
+                    console.log('Received call from peer:', call.peer);
+                    call.on('stream', function(remoteStream) {
+                        console.log("Self peerID:",peer.id);
+                        // Show stream in some video/canvas element.
+                        console.log("stream Recv")
+                        user2.srcObject = remoteStream;
+                        user2.style.zIndex = 2;
+                        user2.play();
+                        user1.muted = true;
                     });
-                Conn.on("open",()=>{
-                    console.log("connected:" , Conn);
-                })
-                console.log('Received call from peer:', call.peer);
-                call.on('stream', function(remoteStream) {
-                    console.log("Self peerID:",peer.id);
-                    // Show stream in some video/canvas element.
-                    console.log("stream Recv")
-                    user2.srcObject = remoteStream;
-                    //user1.style.opacity=0;
-                    //user2.style.opacity=1;
-                    user2.style.zIndex = 2;
-                    user2.play();
+                }, function(err) {
+                    console.log('Failed to get remote stream' ,err);
+                    console.log(adapter.browserDetails.browser)
                 });
-            }, function(err) {
-                console.log('Failed to get remote stream' ,err);
-                console.log(adapter.browserDetails.browser)
-            });
-            queueRenderPage(pageNum);
+                queueRenderPage(pageNum);
+            })
         }
 
-        async function peerOut(){
+        let peerOut = async function(){
             if(user1.srcObject ==null) return;
             console.log("peerOut:")
-            let ID = "0";
-            if( sessionStorage.getItem("peerID") == undefined ){    
-                const qR = await getDocs(query( collection(db, oClass) ) , where("status" , "==" , false));
-                qR.forEach((doc)=>{
-                    console.log(doc.id, " => ", doc.data());
+                //firestore
+                /*let ID = "0";
+                if( sessionStorage.getItem("peerID") == undefined ){    
+                    const qR = await getDocs(query( collection(db, oClass) ) , where("status" , "==" , false));
+                    qR.forEach((doc)=>{
+                        console.log(doc.id, " => ", doc.data());
+                    })
+                    const NO = Math.floor( Math.random() * (qR.size-1) );
+                    //console.log(qR.size)
+                    console.log("NO:" ,NO);
+                    let count =0
+                    qR.forEach((doc) =>{
+                        if(count == NO){
+                            ID = doc.data().ID;  //Use in test
+                            //peerConnRef = mediaConn( doc.ID , getUserMedia );  //Use in release
+                            console.log("doc.ID:", ID)
+                            return;
+                        }else count++
+                    })
+                }else{
+                    ID = sessionStorage.getItem("peerID")||ID
+                }*/
+                //console.log(databaseRef)
+            fb.auth().onAuthStateChanged(() => {
+                databaseRef.get().then((snapshot)=>{
+                //database.child(oClass).child("ROOM").get().then((snapshot)=>{
+                    console.log("call start")
+                    if(snapshot.val().status){
+                        alert("Teacher is in class already")
+                        history.back();
+                        return    
+                    }
+                    let id = snapshot.val().id
+                    console.log(id)
+                    let remotePeer = peer.call(snapshot.val().id , user1.srcObject);
+                    console.log("remotePeer" , peer.connections)
+                    remotePeer.on("stream" , function(remoteStream){
+                        user2.srcObject = remoteStream
+                        user2.play();
+                        user2.style.zIndex=2;
+                        user1.muted = true
+                    }),function(connectErr){
+                        console.log("Fail to connect" , connectErr)
+                    }
+                }).catch((err)=>{
+                    console.log(err)
                 })
-                const NO = Math.floor( Math.random() * (qR.size-1) );
-                //console.log(qR.size)
-                console.log("NO:" ,NO);
-                let count =0
-                qR.forEach((doc) =>{
-                    if(count == NO){
-                        ID = doc.data().ID;  //Use in test
-                        //peerConnRef = mediaConn( doc.ID , getUserMedia );  //Use in release
-                        console.log("doc.ID:", ID)
-                        return;
-                    }else count++
-                })
-            }else{
-                ID = sessionStorage.getItem("peerID")||ID
-            }
-            console.log("call start")
-            let remotePeer = peer.call(ID , user1.srcObject);
-            console.log("remotePeer" , peer.connections)
-            remotePeer.on("stream" , function(remoteStream){
-                user2.srcObject = remoteStream
-                //user1.style.opacity=0;
-                //user2.style.opacity=1;
-                user2.play();
-                user2.style.zIndex=2;
-            }),function(connectErr){
-                console.log("Fail to connect" , connectErr)
-            }
-
+            })
         }
     
         const hangUp = function(){
             peer.destroy();
+            database.close()||database.off()
             if(sessionStorage.getItem("type") == "Teacher") deleteDoc(window.selfRoom);
         }
         document.getElementById("leave-btn").addEventListener("click" , hangUp)
@@ -201,11 +227,13 @@
                 console.log('Failed to get local stream' ,err);
             });
         });
-    
-        document.getElementById("camera-btn").addEventListener("click" ,function(){
-            console.log("autoRun")
-            switch(sessionStorage.getItem("type")){
-                case "Teacher":{
+        
+        fb.auth().onAuthStateChanged(() => {
+            database.ref(oClass + '/test').set({test:Math.random()}).then(async() => {
+                console.log('User is Teacher, has write permission');
+                sessionStorage.setItem("type", "Teacher")
+                peerOut = null;
+                document.getElementById("camera-btn").addEventListener("click" ,function(){
                     peerIn();
                     const sumbitBtn = document.getElementById('submit-btn')
                     sumbitBtn.addEventListener('click', async() => {
@@ -219,9 +247,11 @@
                         }
                     })
                     sumbitBtn.style.visibility = 'visible'
-                    break;
-                }
-                case "Student":{
+                })
+            }).catch((error) => {
+                console.log("User is Student, no write permission")
+                peerIn = null;
+                document.getElementById("camera-btn").addEventListener("click" ,function(){
                     peer.on('connection', function(recv){
                         const dc = recv;
                         console.log("connection recv")
@@ -244,15 +274,13 @@
                             }
                         });
                         console.log("packet detected" , recv);
-                    });
-                    //document.getElementById('question').
+                    })
                     console.log("connection listener build")
                     peerOut();
-                    break;
-                }
-                default: peerOut()
-            }
-        }); 
+                });
+            });
+        });
+
         peer.on('close', () => {
             console.log('Connection is closed');
         });
