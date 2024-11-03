@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+    <!--<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>-->
     <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
     <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
@@ -76,7 +76,7 @@
         import { firebaseConfig } from "./modules/firebaseConfig.js"
         import { peerJsConfig } from "./modules/peerJsConfig.js"
         ES6*/
-        const peer = new window.Peer(window.peerJsConfig)
+        let peer = new window.Peer(window.peerJsConfig)
         //const peerID = sessionStorage.getItem("peer.id")
         const peerOpen =  peer.on('open', function(id) {
             console.log('My peer ID is: ' + id);
@@ -127,6 +127,7 @@
                     Organizer: "Testing" ,
                     Status: false
                 });*/
+                databaseRef.onDisconnect().remove()
                 databaseRef.set({id:peer.id , status:false})
                 peer.on('call', async function(call) {
                     console.log("call recv")
@@ -213,8 +214,8 @@
     
         const hangUp = function(){
             peer.destroy();
-            database.close()||database.off()
-            if(sessionStorage.getItem("type") == "Teacher") deleteDoc(window.selfRoom);
+            peer = new window.Peer(window.peerJsConfig)
+            //if(sessionStorage.getItem("type") == "Teacher") deleteDoc(window.selfRoom);
         }
         document.getElementById("leave-btn").addEventListener("click" , hangUp)
 
@@ -283,11 +284,17 @@
 
         peer.on('close', () => {
             console.log('Connection is closed');
+            fb.auth().onAuthStateChanged(() => {
+                databaseRef.update({status:false})
+            }).catch((err) => {
+                console.log("Ignore this delete")
+            })
         });
 
         // Event handler for connection error
         peer.on('error', (error) => {
             console.error('Connection error:', error);
+            if(error === 'disconnected')peer.reconnect()
         });
 
         //PDF!
