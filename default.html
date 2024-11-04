@@ -15,7 +15,7 @@
 <body>
    <header>
     <div id="leftbar">
-      <img src="image/profile.jpg" alt="profile">
+      <img src="./icon/profile.jpg" alt="profile">
        <div class="logout">
          <button type="submit" class="btn btn-default btn-sm" onclick="showModal()">
          <span class="glyphicon glyphicon-log-out"></span></button></a>
@@ -32,7 +32,8 @@
       <script>
         // 顯示彈窗
         function showModal() {
-          document.getElementById('logoutModal').style.display = 'block';
+          window.open("account.html")
+          //document.getElementById('logoutModal').style.display = 'block';
         }
 
         // 關閉彈窗
@@ -50,7 +51,7 @@
   </header>
 
   <div class="course">
-    <img src="image/1.jpg" alt="課程一">
+    <img src="./icon/1.jpg" alt="課程一">
     <div class="text-info">
       <h2><strong>瞭解你自己的英語程度</strong></h2>
       <p>Learn the Basics</p>
@@ -59,7 +60,7 @@
   </div>
 
   <div class="course">
-    <img src="image/2.jpg" alt="課程二">
+    <img src="./icon/2.jpg" alt="課程二">
     <div class="text-info">
       <h2><strong>醫療用語教學</strong></h2>
       <p>教你如何描述自身的病症</p>
@@ -68,7 +69,7 @@
   </div>
 
   <div class="course">
-    <img src="image/3.jpg" alt="課程三">
+    <img src="./icon/3.jpg" alt="課程三">
     <div class="text-info">
       <h2><strong>商業英文</strong></h2>
       <p>教導你在面試或工作時的英文用語</p>
@@ -77,7 +78,7 @@
   </div>
 
   <div id="sidebar" class="hidden">
-    <img src="image/books.jpg" alt="english level">
+    <img src="./icon/books.jpg" alt="english level">
     <div class="class-info">
       <h2 id="course-info"></h2>
       <button id="teacher-info" class="teacher">
@@ -100,13 +101,13 @@
     <button class="open-course-button second-button" onclick="openCourse()"><strong>瞭解課程</strong></button>
     <script>
       function openCourse(){
-        window.location.href = 'class.html';
+        window.open("Timetable.html");
       }
     </script>
     <button class="open-course-button" onclick="openClass()"><strong>進入房間</strong></button>
     <script>
       function openClass(){
-        window.location.href = 'data.html';
+        window.open("VideoCallPage.html");
       }
     </script>
 
@@ -115,17 +116,17 @@
     var courseData = {
       "Course 1": {
         teacherName: "點擊瞭解：陳老師",
-        teacherImage: "image/victor.png",
+        teacherImage: "./icon/victor.png",
         Course: "瞭解你自己的英語程度"
       },
       "Course 2": {
         teacherName: "點擊瞭解：蔡老師",
-        teacherImage: "image/victor.png",
+        teacherImage: "./icon/victor.png",
         Course: "醫療用語教學"
       },
       "Course 3": {
         teacherName: "點擊瞭解：林老師",
-        teacherImage: "image/victor.png",
+        teacherImage: "./icon/victor.png",
         Course: "商業英文"
       }
     };
@@ -139,6 +140,11 @@
         document.getElementById("teacher-info").querySelector("img").src = teacherInfo.teacherImage;
         document.getElementById("course-info").textContent = teacherInfo.Course;
         document.getElementById("sidebar").classList.remove("hidden");
+      }
+      if(courseNumber == 1){
+        sessionStorage.setItem("Class" , "MedicalEnglish")
+      }else{
+        session
       }
     }
   </script>
