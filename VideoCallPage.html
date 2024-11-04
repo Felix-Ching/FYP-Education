@@ -252,6 +252,59 @@
             }).catch((error) => {
                 console.log("User is Student, no write permission")
                 peerIn = null;
+                {
+                    button = document.getElementById("prev");
+                    button.style.display = "none";
+                    button.disabled = true;
+                    button = document.getElementById("next");
+                    button.style.display = "none";
+                    button.disabled = true;
+                    onNextPage = onPrevPage = null;
+                    //download text(uncomplete)
+                    // Add an event listener to the button
+                    const sumbitBtn = document.getElementById('submit-btn')
+                    sumbitBtn.addEventListener('click', async() => {
+                        try{
+                            // Get the user-inputted text
+                            let userInput = document.getElementById('input').value;
+                            // create a new handle
+                            const newHandle = await showSaveFilePicker({
+                                suggestedName: sessionStorage.getItem("class") + '.txt',
+                                types: {
+                                    description: 'Text documents',
+                                    accept: {
+                                    'text/plain': ['.txt'],
+                                    },
+                                },
+                            });
+
+                            // create a FileSystemWritableFileStream to write to
+                            const writableStream = await newHandle.createWritable();
+
+                            // write our file
+                            await writableStream.write(userinput);
+
+                            // close the file and write the contents to disk.
+                            await writableStream.close();
+                        }catch(err){
+                            console.log(err)
+                            console.log("Will use <a> to download")
+                            //console.log(document.getElementById('input').value)
+                            //const blob = new Blob([document.getElementById('input').value.toString()] , {type: 'text/plain'});
+                            const blob = new Blob([await document.getElementById('input').value], { type: 'text/plain' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = sessionStorage.getItem("class") + "'s Notes" + '.txt';
+                            a.target = '_blank';
+                            a.rel = 'noopener noreferrer';
+                            a.click();
+                            URL.revokeObjectURL(url);
+                        };
+                    })
+                    sumbitBtn.textContent = "Download"
+                    sumbitBtn.style.visibility = 'visible'
+                }
                 document.getElementById("camera-btn").addEventListener("click" ,function(){
                     peer.on('connection', function(recv){
                         const dc = recv;
@@ -426,7 +479,7 @@
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.js.map" type="application/json"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script>
+    <!--<script defer>
         //saveAs(blob, "hello world.txt");
         //deny student to control pdf page
         if(sessionStorage.getItem("type") !== "Teacher"){
@@ -482,7 +535,7 @@
             sumbitBtn.textContent = "Download"
             sumbitBtn.style.visibility = 'visible'
         }
-    </script>
+    </script>-->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js.map" type="application/json"></script>
 </body>
 </html>
