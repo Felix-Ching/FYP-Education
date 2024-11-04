@@ -282,7 +282,7 @@ let toggleScreen = async(e) =>{
 
 
 window.addEventListener('beforeunload', leaveChannel)
-
+document.getElementById("settings-btn").addEventListener('click', toggleStudentCamera)
 document.getElementById('camera-btn').addEventListener('click', toggleCamera)
 document.getElementById('mic-btn').addEventListener('click', toggleMic)
 document.getElementById('screen-btn').addEventListener('click', toggleScreen)
