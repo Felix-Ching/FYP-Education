@@ -16,7 +16,6 @@
             }
         }
         const RedirectURL = redirectURL()//redirectURL();
-        firebaseConfig.apiKey = "AIzaSyD4mu_Lqmkfki-zcTKGbC-8fqdS9q-MV5A";
         const fb = firebase.initializeApp(firebaseConfig)
         //console.log("onAuth")
         fb.auth().onAuthStateChanged((user) => {
