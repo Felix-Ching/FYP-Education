@@ -103,7 +103,15 @@
 
         let selfVideo = null ,
             selfAudio = null;
-    
+
+        const callbtn = document.getElementById('call-btn'),
+            camerabtn = document.getElementById('camera-btn'),
+            micbtn = document.getElementById('mic-btn'),
+            screenbtn = document.getElementById('screen-btn'),
+            hangupbtn = document.getElementById('leave-btn')
+        
+        hangupbtn.display = 0
+
         let getUM = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia || navigator.mediaDevices || window.navigator.mediaDevices.getUserMedia
         
         if ((navigator.mediaDevices && 'getDisplayMedia' in navigator.mediaDevices)) {
@@ -287,6 +295,8 @@
                         }
                     })
                     sumbitBtn.style.visibility = 'visible'
+                    callbtn.display = camerabtn.display = micbtn.display = screenbtn.display = 0;
+                    hangupbtn.display = 1
                 })
             }).catch((error) => {
                 console.log("User is Student, no write permission")
@@ -371,6 +381,8 @@
                     })
                     console.log("connection listener build")
                     peerOut();
+                    callbtn.display = camerabtn.display = micbtn.display = screenbtn.display = 0;
+                    hangupbtn.display = 1
                 });
             });
         });
@@ -382,6 +394,8 @@
             }).catch((err) => {
                 console.log("Ignore this delete")
             })
+            callbtn.display = camerabtn.display = micbtn.display = screenbtn.display = 1;
+            hangupbtn.display = 0
         });
 
         // Event handler for connection error
