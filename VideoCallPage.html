@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Access-Control-Allow-Origin" content="self">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Permissions-Policy" content="display-capture=(self); microphone = (self)">
+    <meta http-equiv="Permissions-Policy" content="display-capture=(self); microphone = (self); camera = (self)">
     <meta allow="display-capture">
     <title>VideoCall</title>
     <meta name ='viewport' content="width=device-width, initial-scale=1">
@@ -53,7 +53,7 @@
 
     <div id='controls'>
         <!--讓學生打開學生鏡頭的按鈕-->
-        <div class="control-container green-btn" id='camera-btn'>
+        <div class="control-container green-btn" id='call-btn'>
             <img src="./icon/camera.png" alt = studentCamera-toggle/>
         </div>
         <!-- 視訊畫面中的相機開關按鈕 -->
@@ -100,6 +100,9 @@
         let user1 = document.getElementById('user-1');
         let user2 = document.getElementById('user-2');
         var peerConnRef;
+
+        let selfVideo = null ,
+            selfAudio = null;
     
         let getUM = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia || navigator.mediaDevices || window.navigator.mediaDevices.getUserMedia
         
@@ -153,7 +156,6 @@
                         user2.srcObject = remoteStream;
                         user2.style.zIndex = 2;
                         user2.play();
-                        user1.muted = true;
                     });
                 }, function(err) {
                     console.log('Failed to get remote stream' ,err);
@@ -206,7 +208,6 @@
                         user2.srcObject = remoteStream
                         user2.play();
                         user2.style.zIndex=2;
-                        user1.muted = true
                     }),function(connectErr){
                         console.log("Fail to connect" , connectErr)
                     }
@@ -223,22 +224,53 @@
         }
         document.getElementById("leave-btn").addEventListener("click" , hangUp)
 
-        document.getElementById("screen-btn").addEventListener("click" , function(){
-            navigator.mediaDevices.getDisplayMedia({video: true, audio: true})
-            .then( (stream)=> {
+        document.getElementById("mic-btn").addEventListener("click" , ()=>{
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            .then((stream) => {
+                selfAudio = stream.getAudioTracks()[0];
+            })
+        })
+
+        document.getElementById("camera-btn").addEventListener("click" , ()=>{
+            navigator.mediaDevices.getUserMedia({audio:false , video: true})
+            .then((stream) => {
+                selfVideo = stream.getVideoTracks()[0];
                 user1.srcObject = stream;
-                user1.play();
+            })
+        })
+
+        document.getElementById("screen-btn").addEventListener("click" , function(){
+            navigator.mediaDevices.getDisplayMedia({video: true, audio: false})
+            .then( (stream)=> {
+                selfVideo = stream;
+                user1.srcObject = selfVideo;
+                //user1.play();
             }, function(err) {
                 console.log('Failed to get local stream' ,err);
             });
         });
         
+        function merger(){
+            if(selfVideo === null || selfAudio === null) {
+                alert("Plz select Video & Audio input first")
+                return -1;
+            }
+            else{
+                const Stream = new MediaStream();
+                Stream.addTrack(selfVideo)
+                Stream.addTrack(selfAudio);
+                user1.srcObject = Stream
+                console.log("mergered")
+            }
+        }
+
         fb.auth().onAuthStateChanged(() => {
             database.ref(oClass + '/test').set({test:Math.random()}).then(async() => {
                 console.log('User is Teacher, has write permission');
                 sessionStorage.setItem("type", "Teacher")
                 peerOut = null;
-                document.getElementById("camera-btn").addEventListener("click" ,function(){
+                document.getElementById("call-btn").addEventListener("click" ,function(){
+                    if(merger() == -1) return
                     peerIn();
                     const sumbitBtn = document.getElementById('submit-btn')
                     sumbitBtn.addEventListener('click', async() => {
@@ -309,7 +341,8 @@
                     sumbitBtn.textContent = "Download"
                     sumbitBtn.style.visibility = 'visible'
                 }
-                document.getElementById("camera-btn").addEventListener("click" ,function(){
+                document.getElementById("call-btn").addEventListener("click" ,function(){
+                    merger();
                     peer.on('connection', function(recv){
                         const dc = recv;
                         console.log("connection recv")
