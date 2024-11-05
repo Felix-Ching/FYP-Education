@@ -155,7 +155,6 @@
                         console.log("stream Recv")
                         user2.srcObject = remoteStream;
                         user2.style.zIndex = 2;
-                        user2.play();
                     });
                 }, function(err) {
                     console.log('Failed to get remote stream' ,err);
@@ -194,6 +193,10 @@
             fb.auth().onAuthStateChanged(() => {
                 databaseRef.get().then((snapshot)=>{
                 //database.child(oClass).child("ROOM").get().then((snapshot)=>{
+                    if(snapshot === null){
+                        alert("No Teacher in room")
+                        return
+                    }
                     console.log("call start")
                     if(snapshot.val().status){
                         alert("Teacher is in class already")
@@ -242,8 +245,8 @@
         document.getElementById("screen-btn").addEventListener("click" , function(){
             navigator.mediaDevices.getDisplayMedia({video: true, audio: false})
             .then( (stream)=> {
-                selfVideo = stream;
-                user1.srcObject = selfVideo;
+                selfVideo = stream.getVideoTracks()[0];
+                user1.srcObject = stream;
                 //user1.play();
             }, function(err) {
                 console.log('Failed to get local stream' ,err);
