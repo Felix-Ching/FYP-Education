@@ -209,7 +209,7 @@
                     console.log("remotePeer" , peer.connections)
                     remotePeer.on("stream" , function(remoteStream){
                         user2.srcObject = remoteStream
-                        user2.play();
+                        //user2.play();
                         user2.style.zIndex=2;
                     }),function(connectErr){
                         console.log("Fail to connect" , connectErr)
