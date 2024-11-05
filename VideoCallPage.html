@@ -231,6 +231,8 @@
         const hangUp = function(){
             peer.destroy();
             peer = new window.Peer(window.peerJsConfig)
+            callbtn.display = camerabtn.display = micbtn.display = screenbtn.display = 1;
+            hangupbtn.display = 0
             //if(sessionStorage.getItem("type") == "Teacher") deleteDoc(window.selfRoom);
         }
         document.getElementById("leave-btn").addEventListener("click" , hangUp)
