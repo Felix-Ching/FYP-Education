@@ -45,7 +45,14 @@
         </div>
         <script async>
             const viewer = document.getElementById("viewer")
-            viewer.src = "./pdfjs/web/viewer.html#page-fit?file=./Document/BasicMedicalEnglish.pdf"//sessionStorage.getItem("class") || "MedicalEnglish";
+            const TargetPDF = sessionStorage.TargetPDF
+            const link = './pdfjs/web/viewer.html?file=../../Document/'+ TargetPDF +'.pdf'
+            if(TargetPDF){
+                viewer.src = link//sessionStorage.getItem("class") || "MedicalEnglish";
+            }else{
+                alert("Plz select class first")
+                location.replace("default.html")
+            }
         </script>
         
     </div>

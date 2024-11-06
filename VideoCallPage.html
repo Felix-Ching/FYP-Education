@@ -509,8 +509,13 @@
         /**
          * Asynchronously downloads PDF.
          */
+        let TargetPDF = sessionStorage.getItem("TargetPDF")
+        if(!TargetPDF){
+            alert("Plz select course from Hompage")
+            location.replace("default.html")
+        }
         pdfjsLib.getDocument({
-            url: 'Document/MySQL.pdf',
+            url: './Document/'+ TargetPDF +'.pdf',
             disableRange: true,
             disableStream: true,
             disableAutoFetch: true,
