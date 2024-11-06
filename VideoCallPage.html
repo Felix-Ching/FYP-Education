@@ -80,17 +80,26 @@
         import { firebaseConfig } from "./modules/firebaseConfig.js"
         import { peerJsConfig } from "./modules/peerJsConfig.js"
         ES6*/
-        let peer = new window.Peer(window.peerJsConfig)
-        //const peerID = sessionStorage.getItem("peer.id")
-        const peerOpen =  peer.on('open', function(id) {
-            console.log('My peer ID is: ' + id);
-        });
-        
+
         //const db = getFirestore(initializeApp(firebaseConfig));
         //const db = firebase.firestore(firebase.initializeApp(firebaseConfig));
         const fb = firebase.initializeApp(firebaseConfig)
         // Initialize Realtime Database and get a reference to the service
         const database = firebase.database(fb);
+
+        fb.auth().onAuthStateChanged((user) => {
+            if(!user){
+                alert("Plz signin/up first")
+                location.replace("account.html")
+            }
+        })
+
+        let peer = new window.Peer(window.peerJsConfig)
+        //const peerID = sessionStorage.getItem("peer.id")
+        const peerOpen =  peer.on('open', function(id) {
+            console.log('My peer ID is: ' + id);
+        });
+    
 
         //sessionStorage.Class = "MedicalEnglish"
         const oClass = sessionStorage.Class || "MedicalEnglish";
