@@ -106,8 +106,8 @@
     */
     // Initialize Firebase
     if(!sessionStorage.getItem("Class")){
-      console.log("You haven't select class")
-      history.back()
+      alert("You haven't select class")
+      location.replace("default.html")
     }
 
     const app = firebase.initializeApp(firebaseConfig);
