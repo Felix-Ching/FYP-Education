@@ -619,8 +619,10 @@ See https://github.com/adobe-type-tools/cmap-resources
 
     </div> <!-- outerContainer -->
     <div id="printContainer"></div>
+    <div id="audio"></div>
     <script src="pdf-analytics.js"></script>
   </body>
+  <script src="../../speakjs/speakClient.js"></script>
   <script>
     // Get the PDFViewer object
     const pdfViewer = document.getElementById('viewer');
@@ -638,14 +640,41 @@ See https://github.com/adobe-type-tools/cmap-resources
     // Speak the text
     window.speechSynthesis.speak(utterance);*/
 
+    function eS(text){
+      speak(text)
+    }
+
+    let SSUVoice = null;
+    
+    async function setUpSSU(){
+      SSUVoice = await window.speechSynthesis.getVoices().find(voice => voice.name === 'English (Great Britain)+Robosoft2')
+    }
+
+    function SSU( text){
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.voice = SSUVoice
+      window.speechSynthesis.speak(utterance);
+    }
+
+    let speakSelect = null
+
+    if (window.speechSynthesis.getVoices().length > 0){
+      speakSelect = SSU
+      console.log("SSU")
+    }else{
+      speakSelect = eS
+      console.log("eS")
+    }
+
     pdfViewer.addEventListener("mouseup", async() => {
       console.log("Selected text")
       const selectedText = window.getSelection().toString()  || ""      //pdfViewer.textSelections[0].textContent;
       const filteredText = selectedText.replace(/[^\x00-\x7F]+/g, '');
-      const utterance = new SpeechSynthesisUtterance(filteredText);
-      utterance.voice = await window.speechSynthesis.getVoices().find(voice => voice.name === 'English (Great Britain)+Robosoft2');
-      window.speechSynthesis.speak(utterance);
+      speakSelect(filteredText)
+
       console.log(selectedText , filteredText)
     });
+
+    setUpSSU()
   </script>
 </html>
