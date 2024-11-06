@@ -117,7 +117,9 @@
       "Course 1": {
         teacherName: "點擊瞭解：陳老師",
         teacherImage: "./icon/victor.png",
-        Course: "瞭解你自己的英語程度"
+        Course: "瞭解你自己的英語程度",
+        Document: "BasicMedicalEnglish",
+        ClassName: "MedicalEnglish"        
       },
       "Course 2": {
         teacherName: "點擊瞭解：蔡老師",
@@ -132,19 +134,16 @@
     };
 
     function showInfo(courseNumber) {
-      var courseName = "Course " + courseNumber;
+      let courseName = "Course " + courseNumber;
 
       if (courseData[courseName]) {
-        var teacherInfo = courseData[courseName];
-        document.getElementById("teacher-name").textContent = teacherInfo.teacherName;
-        document.getElementById("teacher-info").querySelector("img").src = teacherInfo.teacherImage;
-        document.getElementById("course-info").textContent = teacherInfo.Course;
+        const courseInfo = courseData[courseName];
+        document.getElementById("teacher-name").textContent = courseInfo.teacherName;
+        document.getElementById("teacher-info").querySelector("img").src = courseInfo.teacherImage;
+        document.getElementById("course-info").textContent = courseInfo.Course;
         document.getElementById("sidebar").classList.remove("hidden");
-      }
-      if(courseNumber == 1){
-        sessionStorage.setItem("Class" , "MedicalEnglish")
-      }else{
-        session
+        sessionStorage.setItem("TargetPDF" , courseInfo.Document)
+        sessionStorage.setItem("Class" , courseInfo.ClassName)
       }
     }
   </script>
