@@ -379,10 +379,10 @@
                                 }
                                 case "Question":{
                                     document.getElementById('input').style.height = `${25}%`;
-                                    const span = document.createElement('span');
-                                    span.textContent = data.Data;
-                                    span.id = "question";
-                                    document.getElementById('text').appendChild(span);
+                                    const div = document.createElement('div');
+                                    div.textContent = data.Data;
+                                    div.id = "question";
+                                    document.getElementById('text').appendChild(div);
                                     break;
                                 }
                                 default:console.log('Received', data);
