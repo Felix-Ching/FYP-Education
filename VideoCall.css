@@ -87,8 +87,8 @@
 
 #submit-btn {
     position: fixed;
-    left: 33.5%;
-    bottom: 235.5px;
+    right:0%;
+    bottom: 230px;
     padding: 10px 20px;
     background-color: #007bff; /* 改變為更現代的藍色 */
     color: white;
