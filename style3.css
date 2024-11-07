@@ -13,7 +13,7 @@ h1{
 
 .course {
   background-color: #fff;
-  width:35%;
+  width: 51%;
   margin: 20px 120px;
   padding: 20px;
   border-radius: 25px;
@@ -235,6 +235,13 @@ h1{
     outline:none;
     border:none;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.text-area {
+    flex: none; 
+    width: 200px; 
+    margin-top: 20px;
+    margin-left: auto; 
 }
 
 
