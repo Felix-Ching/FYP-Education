@@ -88,7 +88,7 @@
 #submit-btn {
     position: fixed;
     right: 60%;
-    bottom: 255.5px;
+    bottom: 0%;
     padding: 10px 20px;
     background-color: #007bff; /* 改變為更現代的藍色 */
     color: white;
@@ -116,7 +116,7 @@
 }
 
 #question {
-    position: fixed;
+    position: absolute;
     bottom: 25%;
     left: 0;
     width: 40%;
