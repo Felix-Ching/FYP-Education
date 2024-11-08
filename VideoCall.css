@@ -116,7 +116,8 @@
 }
 
 #question {
-    position: absolute;
+    color: antiquewhite;
+    position: fixed;
     bottom: 25%;
     left: 0;
     width: 40%;
