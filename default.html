@@ -13,6 +13,9 @@
 </head>
 
 <body>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+  <script src="./modules/firebaseConfig.js"></script>
    <header>
     <div id="leftbar">
       <img src="./icon/profile.jpg" alt="profile">
@@ -50,7 +53,7 @@
     </div>
   </header>
 
-  <div class="course">
+  <div class="course" id="1">
     <img src="./icon/1.jpg" alt="課程一">
     <div class="text-info">
       <h2><strong>瞭解你自己的英語程度</strong></h2>
@@ -59,10 +62,11 @@
     </div>
     <div class="text-area">
       <p>課程公告顯示區:</p>
+      <span id="lastAnn"></span>
     </div>
   </div>
 
-  <div class="course">
+  <div class="course" id="2">
     <img src="./icon/2.jpg" alt="課程二">
     <div class="text-info">
       <h2><strong>醫療用語教學</strong></h2>
@@ -71,10 +75,11 @@
     </div>
     <div class="text-area">
       <p>課程公告顯示區:</p>
+      <span id="lastAnn"></span>
     </div>
   </div>
 
-  <div class="course">
+  <div class="course" id="3">
     <img src="./icon/3.jpg" alt="課程三">
     <div class="text-info">
       <h2><strong>商業英文</strong></h2>
@@ -83,6 +88,7 @@
     </div>
     <div class="text-area">
       <p>課程公告顯示區:</p>
+      <span id="lastAnn"></span>
     </div>
   </div>
 
@@ -121,24 +127,26 @@
     </script>
 
   </div>
-  <script>
+  <script >
     var courseData = {
       "Course 1": {
         teacherName: "點擊瞭解：陳老師",
         teacherImage: "./icon/victor.png",
         Course: "瞭解你自己的英語程度",
-        Document: "BasicMedicalEnglish",
-        ClassName: "MedicalEnglish"        
+        ClassName: "SelfUnderstanding"
       },
       "Course 2": {
         teacherName: "點擊瞭解：蔡老師",
         teacherImage: "./icon/victor.png",
-        Course: "醫療用語教學"
+        Course: "醫療用語教學",
+        Document: "BasicMedicalEnglish",
+        ClassName: "MedicalEnglish"    
       },
       "Course 3": {
         teacherName: "點擊瞭解：林老師",
         teacherImage: "./icon/victor.png",
-        Course: "商業英文"
+        Course: "商業英文",
+        ClassName: "BunsinessEnglish"
       }
     };
 
@@ -155,6 +163,31 @@
         sessionStorage.setItem("Class" , courseInfo.ClassName)
       }
     }
+
+    const app = firebase.initializeApp(firebaseConfig)
+    // Initialize Realtime Database and get a reference to the service
+    const database = firebase.database(app);
+
+    let path = []
+
+    Object.keys(courseData).forEach(data => {
+      path.push('/' + courseData[data].ClassName + '/Announcement/')
+    });
+    path.forEach((data,index) =>{
+      const textBlock = document.getElementById(index+1).querySelector('#lastAnn')
+      database.ref(data).on('value' , (snapshot) => {
+        let array = []
+        snapshot.forEach((context) =>{
+          array.push(context.val().context)
+        })
+        console.log(array)
+        if(textBlock !== null) textBlock.textContent = array[array.length -1]
+        else console.log("cannot find textBlock")
+        //console.log(snapshot.at(-1))
+      },{
+        //once:true
+      });
+    })
   </script>
 </body>
 </html>
