@@ -100,17 +100,16 @@
         <img src="" alt="Teacher Image">
         <span id="teacher-name" ></span>
       </button>
+      
+      <h4 id="Class-Teacher"><strong></strong></h4>
+      <h4 id="Course-Introduction"><strong></strong></h4>
+      <p id="Course-Detail"></p>
 
       <script>
         document.getElementById("teacher-info").addEventListener("click", function() {
           window.open("data.html", "_blank");
         });
       </script>
-
-      <h4><strong>授課老師：陳老師</strong></h4>
-      <h4><strong>課程簡介：</strong></h4>
-      <p>瞭解自己的英文水平
-        <br>老師將進行簡單的交流后判斷學生目前的英語水平，並對此定制符合程度的英語課程！</p>
 
     </div>
     <button class="open-course-button second-button" onclick="openCourse()"><strong>瞭解課程</strong></button>
@@ -133,20 +132,32 @@
         teacherName: "點擊瞭解：陳老師",
         teacherImage: "./icon/victor.png",
         Course: "瞭解你自己的英語程度",
-        ClassName: "SelfUnderstanding"
+        ClassName: "SelfUnderstanding",
+        ClassTeacher: "授課老師：陳老師",
+        CourseIntroduction: "課程簡介：",
+        CourseDetail: "本課程幫助學生瞭解自己的英文水平<br>老師將進行簡單的交流后判斷學生目前的英語水平，並對此定制符合程度的英語課程！"
+
       },
       "Course 2": {
         teacherName: "點擊瞭解：蔡老師",
         teacherImage: "./icon/victor.png",
         Course: "醫療用語教學",
         Document: "BasicMedicalEnglish",
-        ClassName: "MedicalEnglish"    
+        ClassName: "MedicalEnglish",
+        ClassTeacher: "授課老師：蔡老師",
+        CourseIntroduction: "課程簡介：",
+        CourseDetail: "本課程旨在幫助學生掌握醫療領域中常用的英文詞匯和專業術語，增進醫護溝通技巧。課程内容包含病患對話、醫學診斷、治療和藥物用語，適合準備入醫療行業或計劃在國外生活留學的學生。"
+
       },
       "Course 3": {
         teacherName: "點擊瞭解：林老師",
         teacherImage: "./icon/victor.png",
         Course: "商業英文",
-        ClassName: "BunsinessEnglish"
+        ClassName: "BunsinessEnglish",
+        ClassTeacher: "授課老師：林老師",
+        CourseIntroduction: "課程簡介：",
+        CourseDetail: "本課程專注於商業場合的英文應用，内容涵蓋商務交流、會議表達、商業寫作和談判技巧，幫助學生在國際商業環境中自信表達和有效溝通。適合有志於提升商業英文技能的學員，包括公司職員和想要進入商業領域的學生。"
+
       }
     };
 
@@ -161,6 +172,11 @@
         document.getElementById("sidebar").classList.remove("hidden");
         sessionStorage.setItem("TargetPDF" , courseInfo.Document)
         sessionStorage.setItem("Class" , courseInfo.ClassName)
+
+        document.getElementById("Class-Teacher").textContent = courseInfo.ClassTeacher;
+        document.getElementById("Course-Introduction").textContent = courseInfo.CourseIntroduction;
+        document.getElementById("Course-Detail").innerHTML = courseInfo.CourseDetail;
+
       }
     }
 
