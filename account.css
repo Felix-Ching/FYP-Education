@@ -1,0 +1,82 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #8B0000, #FF4500); /* 深紅到橘紅漸變 */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Main Container */
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1); /* 半透明白色背景 */
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+}
+
+/* Header */
+header {
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    font-size: 1rem;
+    color: #dcdcdc;
+}
+
+/* Loader */
+.loader {
+    margin-top: 2rem;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* FirebaseUI Overrides */
+.firebaseui-idp-button {
+    border-radius: 8px !important;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.firebaseui-title {
+    font-size: 1.2rem !important;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.firebaseui-idp-text {
+    color: #fff !important;
+    font-size: 1rem !important;
+}
