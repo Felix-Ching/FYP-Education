@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -42,12 +42,12 @@
     top: 60%;
     z-index: 4;
     padding: 10px 20px;
-    background-color: #007bff; /* 改變為更現代的藍色 */
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* 添加過渡效果 */
+    transition: background-color 0.3s ease;
 }
 
 #prev {
@@ -59,7 +59,7 @@
 }
 
 #prev:hover, #next:hover {
-    background-color: #0056b3; /* 懸停時變暗以顯示交互 */
+    background-color: #0056b3;
 }
 
 #text {
@@ -75,14 +75,14 @@
     padding: 10px;
     margin-right: 10px;
     box-sizing: border-box;
-    border: 1px solid #ccc; /* 添加輕微的邊框以區分輸入區域 */
+    border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px; /* 增大字體使其更易讀 */
+    font-size: 16px;
     background-color: #f9f9f9;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 添加內部陰影以增加深度 */
-    resize: none; /* 禁止調整輸入框大小 */
-    overflow-wrap: break-word; /* 超出邊界時自動換行 */
-    height: 35%; /* 自動調整高度 */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    resize: none;
+    overflow-wrap: break-word;
+    height: 35%;
 }
 
 #submit-btn {
@@ -90,12 +90,12 @@
     right: 60%;
     bottom: 0%;
     padding: 10px 20px;
-    background-color: #007bff; /* 改變為更現代的藍色 */
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* 添加過渡效果 */
+    transition: background-color 0.3s ease;
 }
 
 #send-btn {
@@ -103,16 +103,16 @@
     right: 60%;
     bottom: 255.5px;
     padding: 10px 20px;
-    background-color: #007bff; /* 改變為更現代的藍色 */
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* 添加過渡效果 */
+    transition: background-color 0.3s ease;
 }
 
 #submit-btn:hover {
-    background-color: #0056b3; /* 懸停時變暗以顯示交互 */
+    background-color: #0056b3;
 }
 
 #question {
@@ -129,7 +129,6 @@
 }
 
 #user-1 {
-    /*opacity: 1;*/
     z-index: 1;
     position: fixed;
     right: 0;
@@ -137,12 +136,11 @@
 }
 
 #user-2 {
-    /*opacity: 0;*/
     z-index: 0;
     position: fixed;
     right: 0;
     width: 60%;
-    display: block; /* 修正 display: true 錯誤 */
+    display: block;
 }
 
 .video-player {
@@ -166,11 +164,11 @@
 
 #controls {
     position: fixed;
-    bottom: 30px; /* 稍微抬高一些，給用戶輸入的文本框留空間 */
+    bottom: 30px;
     right: 8%;
-    transform: translateX(-50%); /* 居中對齊 */
+    transform: translateX(-50%);
     display: flex;
-    gap: 1.5em; /* 增加按鈕間距 */
+    gap: 1.5em;
     z-index: 9999;
 }
 
@@ -190,17 +188,15 @@
 }
 
 .control-container:hover {
-    background-color: #a31515; /* hover顔色 */
+    background-color: #a31515;
 }
 
-/*學生鏡頭按鈕特殊色*/
 .green-btn {
-    background-color: #08f810; /* 綠色背景 */
-    
+    background-color: #08f810;
 }
 
 .green-btn:hover {
-    background-color: #45a049; /* 懸停時的綠色效果 */
+    background-color: #45a049;
 }
 
 #leave-btn {
@@ -218,10 +214,10 @@
 
 #screen-share-container {
     position: absolute;
-    top: 50px; /* 距離頂部的距離 */
-    left: 50px; /* 距離左側的距離 */
-    width: 400px; /* 容器寬度 */
-    height: 300px; /* 容器高度 */
-    z-index: 1; /* 確保屏幕分享在視訊畫面上方顯示 */
-    overflow: hidden; /* 隱藏溢出部分 */
+    top: 50px;
+    left: 50px;
+    width: 400px;
+    height: 300px;
+    z-index: 1;
+    overflow: hidden;
 }
