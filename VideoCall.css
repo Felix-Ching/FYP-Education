@@ -68,9 +68,9 @@
 
 #input {
     position: fixed;
-    bottom: 10%;
+    bottom: 0;
     left: 0;
-    z-index: 2;
+    z-index: 0;
     width: 65%;
     padding: 10px;
     margin-right: 10px;
@@ -128,24 +128,20 @@
     border: 1px solid black;
 }
 
-#user-1, #user-2 {
-    width: 100%; /* 確保視訊區域能夠充滿右側容器 */
-    height: 100%;
-}
-
-
 #user-1 {
+    /*opacity: 1;*/
     z-index: 1;
     position: fixed;
     right: 0;
-    width: 100%; /* 這裡保持 100% 確保可以依據父容器的寬度縮放 */
+    width: 60%;
 }
 
 #user-2 {
+    /*opacity: 0;*/
     z-index: 0;
     position: fixed;
     right: 0;
-    width: 100%;
+    width: 60%;
     display: block; /* 修正 display: true 錯誤 */
 }
 
