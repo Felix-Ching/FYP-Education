@@ -26,7 +26,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 40%;
+    width: 55%;
     height: 60%;
 }
 
@@ -70,8 +70,9 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 0;
-    width: 65%;
+    z-index: 3;
+    height: 35%;
+    width: 55%;
     padding: 10px;
     margin-right: 10px;
     box-sizing: border-box;
@@ -82,7 +83,6 @@
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     resize: none;
     overflow-wrap: break-word;
-    height: 35%;
 }
 
 #submit-btn {
