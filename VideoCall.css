@@ -4,6 +4,21 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --secondary-color: #f9f9f9;
+    --danger-color: #ff4d4d;
+    --danger-hover: #d90404;
+    --text-color: #000000;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom right, #f7f9fc, #e2ebf0);
+    color: var(--text-color);
+}
+
 #videos {
     display: grid;
     grid-template-columns: 55% 45%; /* 左側占 55%，右側視訊區域占 45% */
@@ -17,10 +32,13 @@
     z-index: 3;
     padding: 20px;
     box-sizing: border-box;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgb(255 1 1 / 10%);
+    background-color: #f80000;
 }
 
 #the-canvas {
-    border: 1px solid black;
+    border: 1px solid #000000;
     direction: ltr;
     z-index: 3;
     position: fixed;
@@ -28,6 +46,9 @@
     left: 0;
     width: 40%;
     height: 60%;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
 }
 
 #pdf-ctl {
@@ -42,12 +63,12 @@
     top: 60%;
     z-index: 4;
     padding: 10px 20px;
-    background-color: #007bff;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
 #prev {
@@ -59,7 +80,8 @@
 }
 
 #prev:hover, #next:hover {
-    background-color: #0056b3;
+    background: linear-gradient(90deg, var(--primary-hover), #003d80);
+    transform: scale(1.05);
 }
 
 #text {
@@ -76,49 +98,40 @@
     padding: 10px;
     margin-right: 10px;
     box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #000000;
+    border-radius: 8px;
     font-size: 16px;
-    background-color: #f9f9f9;
+    background-color: var(--secondary-color);
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     resize: none;
     overflow-wrap: break-word;
 }
 
-#submit-btn {
+#submit-btn, #send-btn {
     position: fixed;
     right: 60%;
-    bottom: 0%;
+    bottom: 0;
     padding: 10px 20px;
-    background-color: #007bff;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: transform 0.2s ease, background-color 0.3s ease;
     z-index: 5;
 }
 
 #send-btn {
-    position: fixed;
-    right: 60%;
     bottom: 255.5px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    z-index:5;
 }
 
-#submit-btn:hover {
-    background-color: #0056b3;
+#submit-btn:hover, #send-btn:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.05);
 }
 
 #question {
-    color: black;
+    color: var(--text-color);
     background-color: white;
     position: fixed;
     bottom: 25%;
@@ -127,7 +140,9 @@
     height: 10%;
     box-sizing: border-box;
     display: block;
-    border: 1px solid black;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #user-1 {
@@ -149,6 +164,8 @@
     background-color: black;
     width: 100%;
     height: 100%;
+    border-radius: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .smallFrame {
@@ -157,11 +174,16 @@
     left: 20px;
     height: 170px;
     width: 300px;
-    border-radius: 5px;
-    border: 2px solid blue;
-    -webkit-box-shadow: 3px 3px 15px -1px rgba(0,0,0,0.77);
-    box-shadow: 3px 3px 15px -1px rgba(0,0,0,0.77);
+    border-radius: 15px;
+    border: 2px solid var(--primary-color);
+    box-shadow: 3px 3px 15px -1px rgba(0, 0, 0, 0.2);
     z-index: 999;
+    transition: transform 0.3s ease;
+}
+
+.smallFrame:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
 }
 
 #controls {
@@ -175,13 +197,14 @@
 }
 
 .control-container {
-    background-color: blue;
+    background-color: var(--primary-color);
     padding: 20px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s ease;
 }
 
 .control-container img {
@@ -190,7 +213,8 @@
 }
 
 .control-container:hover {
-    background-color: #a31515;
+    background-color: var(--primary-hover);
+    transform: translateY(-3px);
 }
 
 .green-btn {
@@ -202,7 +226,11 @@
 }
 
 #leave-btn {
-    background-color: red;
+    background-color: var(--danger-color);
+}
+
+#leave-btn:hover {
+    background-color: var(--danger-hover);
 }
 
 #user-2.fullscreen {
@@ -222,4 +250,6 @@
     height: 300px;
     z-index: 1;
     overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
