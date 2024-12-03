@@ -7,15 +7,15 @@
 :root {
     --primary-color: #007bff;
     --primary-hover: #0056b3;
-    --secondary-color: #f9f9f9;
+    --secondary-color: #ffffff;
     --danger-color: #ff4d4d;
     --danger-hover: #d90404;
-    --text-color: #000000;
+    --text-color: #e8e4e4;
 }
 
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(to bottom right, #f7f9fc, #e2ebf0);
+    background: #070404;
     color: var(--text-color);
 }
 
@@ -132,7 +132,7 @@ body {
 
 #question {
     color: var(--text-color);
-    background-color: white;
+    background-color: #af1a1a;
     position: fixed;
     bottom: 25%;
     left: 0;
