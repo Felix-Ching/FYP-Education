@@ -131,7 +131,7 @@ body {
 }
 
 #question {
-    color: var(--text-color);
+    color: black;
     background-color: #47ff11;
     position: fixed;
     bottom: 25%;
