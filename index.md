@@ -10,7 +10,7 @@ Dependencies:
 [kripken /speak.js (eSpeak)](https://github.com/kripken/speak.js) 
 
 Google Firebase
--Realtime DataBase
--Google Authenication
+- Realtime DataBase
+- Google Authenication
 
 [**Let's get started**](/default.html)
