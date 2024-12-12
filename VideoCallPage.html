@@ -402,7 +402,7 @@
             console.log('Connection is closed');
             fb.auth().onAuthStateChanged(() => {
                 databaseRef.update({status:false})
-            }).catch((err) => {
+            },(err) => {
                 console.log("Ignore this delete")
             })
             callbtn.display = camerabtn.display = micbtn.display = screenbtn.display = 1;
